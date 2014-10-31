@@ -81,6 +81,8 @@ ERR LoadTexture(unsigned short texture_id)
         return 1;
     }
 
+    SDL_SetColorKey(tmp, SDL_TRUE, SDL_MapRGB(tmp->format, TRANSP_R, TRANSP_G, TRANSP_B));
+
     texture_bank[texture_id] = SDL_CreateTextureFromSurface(screen->renderer, tmp);
     SDL_FreeSurface(tmp);
     if(texture_bank[texture_id] == NULL)
