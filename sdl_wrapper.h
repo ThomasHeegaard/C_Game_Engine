@@ -33,6 +33,8 @@ extern SDL_Texture** texture_bank;
 //                  DEFINITIONS
 //======================================================================================
 
+#define RECT        SDL_Rect
+
 #define TRANSP_R    255
 #define TRANSP_G    0
 #define TRANSP_B    255
