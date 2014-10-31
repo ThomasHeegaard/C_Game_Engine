@@ -23,7 +23,7 @@ int main()
     if(InitSDL() != 0)
         return 1;
 
-    Sprite* test = NewSprite(0, 0);
+    Sprite* test = NewSprite(0, ANIMATION | OSCILLATING);
     if(test == NULL)
     {
         fprintf(stderr, "FAIL");
@@ -35,7 +35,10 @@ int main()
     test->center_x  = 120;
     test->center_y  = 120;
     test->angle     = 0;
-    
+
+    test->data[CURRENT_FRAME]   = 0;
+    test->data[FRAMES]          = 8;
+
     int i;
 
     for(i = 200; i > 0; i--)
