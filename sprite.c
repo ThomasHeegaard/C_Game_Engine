@@ -73,7 +73,7 @@ Sprite* NewSprite(unsigned short texture_id, unsigned char flags)
 
 ERR DrawSprite(Sprite* sprite)
 {
-    SDL_Rect src, dst;
+    RECT src, dst;
     dst.x = sprite->center_x - sprite->w / 2;
     dst.y = sprite->center_y - sprite->h / 2;
     dst.w = sprite->w;
