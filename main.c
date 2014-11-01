@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "sdl_wrapper.h"
+#include "fps_manager.h"
 #include "sprite.h"
 
 #include <SDL2/SDL.h>
@@ -22,6 +23,7 @@ int main()
 {
     if(InitSDL() != 0)
         return 1;
+    InitFPS();
 
     Sprite* test = NewSprite(0, ANIMATION | OSCILLATING);
     if(test == NULL)
@@ -52,8 +54,10 @@ int main()
         test->angle += 2.0;
         if(i < 100)
             test->flags |= PLAY;
-        SDL_Delay(2);
+        ManageFPS();
     }
+
+    printf("FPS: %d\n", GetFPS());
 
     FreeSprite(test);
     ExitSDL();
