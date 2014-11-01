@@ -11,6 +11,7 @@
 */
 
 #include "sdl_wrapper.h"
+#include "fps_manager.h"
 #include "sprite.h"
 
 Sprite* NewSprite(unsigned short texture_id, unsigned char flags)
@@ -48,9 +49,9 @@ Sprite* NewSprite(unsigned short texture_id, unsigned char flags)
     if(flags & ANIMATION)
     {
         if(flags & MULTILOOP)
-            sprite->data = (unsigned char*)malloc(5 * sizeof(unsigned char));
+            sprite->data = (unsigned char*)malloc(7 * sizeof(unsigned char));
         else
-            sprite->data = (unsigned char*)malloc(3 * sizeof(unsigned char));
+            sprite->data = (unsigned char*)malloc(5 * sizeof(unsigned char));
         if(sprite->data == NULL)
         {
             fprintf(stderr, "Memory allocation failure for sprite %d", texture_id);
@@ -60,6 +61,8 @@ Sprite* NewSprite(unsigned short texture_id, unsigned char flags)
         sprite->data[FRAMES]            = 0;
         sprite->data[CURRENT_FRAME]     = 0;
         sprite->data[DIRECTION]         = 0;
+        sprite->data[TARGET_FPS]        = 0;
+        sprite->data[FRAMES_TO_SKIP]    = 0;
         if(flags & MULTILOOP)
         {
             sprite->data[LOOPS]         = 0;
@@ -102,31 +105,37 @@ ERR DrawSprite(Sprite* sprite)
 
     if(sprite->flags & ANIMATION && sprite->flags & PLAY)
     {
-        if(sprite->data[DIRECTION] == 0)
-            sprite->data[CURRENT_FRAME]++;
-        else
-            sprite->data[CURRENT_FRAME]--;
+        if(sprite->data[FRAMES_TO_SKIP] <= 0)
+        {
+            sprite->data[FRAMES_TO_SKIP] = GetFPS()/sprite->data[TARGET_FPS];
+            if(sprite->data[DIRECTION] == 0)
+                sprite->data[CURRENT_FRAME]++;
+            else
+                sprite->data[CURRENT_FRAME]--;
 
-        if(sprite->data[CURRENT_FRAME] > sprite->data[FRAMES])
-        {
-            if(sprite->flags & OSCILLATING)
+            if(sprite->data[CURRENT_FRAME] > sprite->data[FRAMES])
             {
-                sprite->data[DIRECTION] = 1;
-                sprite->data[CURRENT_FRAME] = sprite->data[FRAMES] - 1;
+                if(sprite->flags & OSCILLATING)
+                {
+                    sprite->data[DIRECTION] = 1;
+                    sprite->data[CURRENT_FRAME] = sprite->data[FRAMES] - 1;
+                }
+                else
+                    sprite->data[CURRENT_FRAME] = 0;
             }
-            else
-                sprite->data[CURRENT_FRAME] = 0;
-        }
-        else if(sprite->data[CURRENT_FRAME] < 0)
-        {
-            if(sprite->flags & OSCILLATING)
+            else if(sprite->data[CURRENT_FRAME] < 0)
             {
-                sprite->data[DIRECTION] = 0;
-                sprite->data[CURRENT_FRAME] = 1;
+                if(sprite->flags & OSCILLATING)
+                {
+                    sprite->data[DIRECTION] = 0;
+                    sprite->data[CURRENT_FRAME] = 1;
+                }
+                else
+                    sprite->data[CURRENT_FRAME] = sprite->data[FRAMES];
             }
-            else
-                sprite->data[CURRENT_FRAME] = sprite->data[FRAMES];
         }
+        else
+            sprite->data[FRAMES_TO_SKIP]--;
     }
     return 0;
 }

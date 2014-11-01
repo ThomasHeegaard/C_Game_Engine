@@ -49,8 +49,10 @@ typedef struct Sprite
 #define FRAMES          0
 #define CURRENT_FRAME   1
 #define DIRECTION       2
-#define LOOPS           3
-#define CURRENT_LOOP    4
+#define TARGET_FPS      3
+#define FRAMES_TO_SKIP  4
+#define LOOPS           5
+#define CURRENT_LOOP    6
 
 //======================================================================================
 //                  FUNCTIONS
