@@ -37,7 +37,7 @@ int main()
     test->center_x  = 120;
     test->center_y  = 120;
     test->angle     = 0;
-    test->zoom      = 3.0;
+    test->zoom      = 1.0;
 
     test->data[CURRENT_FRAME]   = 0;
     test->data[FRAMES]          = 8;
@@ -49,9 +49,10 @@ int main()
         ClearScreen();
         DrawSprite(test);
         UpdateScreen();
-        test->center_x += 1;
-        test->center_y += 1;
-        test->angle += 2.0;
+        test->center_x  += 1;
+        test->center_y  += 1;
+        test->angle     += 2.0;
+        test->zoom      += 0.01;
         if(i < 100)
             test->flags |= PLAY;
         ManageFPS();
