@@ -50,6 +50,8 @@ int main()
         test->center_x += 1;
         test->center_y += 1;
         test->angle += 2.0;
+        if(i < 100)
+            test->flags |= PLAY;
         SDL_Delay(2);
     }
 

@@ -100,7 +100,7 @@ ERR DrawSprite(Sprite* sprite)
     if(DrawTexture(sprite->texture_id, sprite->angle, &src, &dst) != 0)
         return 1;
 
-    if(sprite->flags & ANIMATION)
+    if(sprite->flags & ANIMATION && sprite->flags & PLAY)
     {
         if(sprite->data[DIRECTION] == 0)
             sprite->data[CURRENT_FRAME]++;
