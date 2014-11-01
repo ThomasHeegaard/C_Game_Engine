@@ -28,6 +28,7 @@ typedef struct Sprite
     unsigned int    center_x;
     unsigned int    center_y;
     float           angle;
+    float           zoom;
 
     unsigned char   flags;
     unsigned char*  data;
@@ -47,9 +48,9 @@ typedef struct Sprite
 //========DATA INDICES===========
 #define FRAMES          0
 #define CURRENT_FRAME   1
-#define DIRECTION       3
-#define LOOPS           4
-#define CURRENT_LOOP    5
+#define DIRECTION       2
+#define LOOPS           3
+#define CURRENT_LOOP    4
 
 //======================================================================================
 //                  FUNCTIONS

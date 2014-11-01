@@ -35,6 +35,7 @@ int main()
     test->center_x  = 120;
     test->center_y  = 120;
     test->angle     = 0;
+    test->zoom      = 3.0;
 
     test->data[CURRENT_FRAME]   = 0;
     test->data[FRAMES]          = 8;

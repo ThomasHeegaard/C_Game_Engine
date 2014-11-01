@@ -42,6 +42,7 @@ Sprite* NewSprite(unsigned short texture_id, unsigned char flags)
     sprite->center_x    = 0;
     sprite->center_y    = 0;
     sprite->angle       = 0.0;
+    sprite->zoom        = 1.0;
     sprite->flags       = flags;
 
     if(flags & ANIMATION)
@@ -74,10 +75,10 @@ Sprite* NewSprite(unsigned short texture_id, unsigned char flags)
 ERR DrawSprite(Sprite* sprite)
 {
     RECT src, dst;
-    dst.x = sprite->center_x - sprite->w / 2;
-    dst.y = sprite->center_y - sprite->h / 2;
-    dst.w = sprite->w;
-    dst.h = sprite->h;
+    dst.w = sprite->w * sprite->zoom;
+    dst.h = sprite->h * sprite->zoom;
+    dst.x = sprite->center_x - dst.w / 2;
+    dst.y = sprite->center_y - dst.h / 2;
 
     if(sprite->flags & ANIMATION)
     {
