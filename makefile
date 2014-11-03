@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS= -g -Wall
 LDFLAGS= -lm -lSDL2
-SOURCES= sdl_wrapper.c fps_manager.c sprite.c main.c
+SOURCES= source/utils/sdl_wrapper.c source/graphics/fps_manager.c source/graphics/sprite.c source/main.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE= test
 
