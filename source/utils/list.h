@@ -77,10 +77,6 @@ ERR SwitchElements(List* list, unsigned short pos_a, unsigned short pos_b);
                     //given positions
 
 //=============================================================
-void PrintList(List* list);
-                    //Print entire list, in order
-
-//=============================================================
 void ClearList(List* list);
                     //Frees all elements and the list itself
 

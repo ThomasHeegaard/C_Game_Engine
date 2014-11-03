@@ -67,7 +67,7 @@ ERR InsertElement(List* list, Element* element, unsigned short position)
 ERR AddElement(void* object, List* list, unsigned short position)
 {
     Element* new    = (Element*)malloc(sizeof(Element));
-    new->value      = value;
+    new->object      = object;
     new->next       = NULL;
     return InsertElement(list, new, position);
 }
@@ -159,17 +159,6 @@ ERR SwitchElements(List* list, unsigned short pos_a, unsigned short pos_b)
     if(MoveElement(list, pos_a, pos_b) != 0)
         return 1;
     return 0;
-}
-
-void PrintList(List* list)
-{
-    Element* element = list->start;
-    while(element->next != NULL)
-    {
-        printf("%d\n", element->value);
-        element = element->next;
-    }
-    printf("%d\n", element->value);
 }
 
 void ClearList(List* list)
