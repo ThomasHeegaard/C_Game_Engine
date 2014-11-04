@@ -14,7 +14,6 @@
 #define LIST_H
 
 #include "global_defines.h"
-#include "../graphics/sprite.h"
 
 //=============================================================
 //          STRUCTURES
@@ -22,7 +21,7 @@
 
 typedef struct Element
 {
-    void*   object;
+    void*     value;
     struct  Element* next;
 } Element;
 
@@ -39,40 +38,45 @@ List* NewList();    //New empty list, with no elements
                     //and size 0
 
 //=============================================================
-ERR InsertElement(List* list, Element* element, unsigned short position);
+ERR InsertElement(List* list, Element* element, short position);
                     //Inserts given element into the given
                     //list at the given position
                     //(0 for front, -1 for back)
 
 //=============================================================
-ERR AddElement(void* object, List* list, unsigned short position);
+ERR NewElement(void* value, List* list, short position);
                     //Add element of given value to given
                     //position (0 for front, -1 for back)
 
 //=============================================================
-Element* GetElement(List* list, unsigned short position);
+Element* GetElement(List* list, short position);
                     //Get element at given position
                     //(0 for front, -1 for back)
 
 //=============================================================
-Element* RemoveElement(List* list, unsigned short position);
+void* GetValue(List* list, short position);
+                    //Get value of element at given position
+                    //(0 for front, -1 for back)
+
+//=============================================================
+Element* RemoveElement(List* list, short position);
                     //Returns element at given position
                     //removing it from the list
                     //(0 for front, -1 for back)
 
 //=============================================================
-ERR FreeElement(List* list, unsigned short position);
+ERR FreeElement(List* list, short position);
                     //Removes and frees the element at
                     //the given position
                     //(0 for front, -1 for back)
 
 //=============================================================
-ERR MoveElement(List* list, unsigned short from_pos, unsigned short to_pos);
+ERR MoveElement(List* list, short from_pos, short to_pos);
                     //Moves the element at position from_pos
                     //to position to_pos
 
 //=============================================================
-ERR SwitchElements(List* list, unsigned short pos_a, unsigned short pos_b);
+ERR SwitchElements(List* list, short pos_a, short pos_b);
                     //Switches the two elements at the 
                     //given positions
 

@@ -28,9 +28,11 @@ List* NewList()
     return list;
 }
 
-ERR InsertElement(List* list, Element* element, unsigned short position)
+ERR InsertElement(List* list, Element* element, short position)
 {
-    if(list == NULL || element == NULL || position > list->size || (list->start == NULL && position > 0))
+    if(list == NULL || element == NULL)
+        return 1;
+    if(position >= list->size || (list->start == NULL && position > 0))
         return 1;
 
     if(position == 0 || list->start == NULL)
@@ -41,22 +43,9 @@ ERR InsertElement(List* list, Element* element, unsigned short position)
         return 0;
     }
 
-    Element* previous = list->start;
-    if(position < 0)
-    while(previous->next != NULL)
-        previous = previous->next;
-    else
-        while(position > 1)
-        {
-            if(previous->next == NULL)
-            {
-                printf("Accessing inexistant position\n");
-                return 1;
-            }
-            previous = previous->next;   
-            position--;
-        }
-
+    Element* previous = GetElement(list, position - 1);
+    if(previous == NULL)
+        return 1;
     element->next   = previous->next;
     previous->next  = element;
     list->size++;
@@ -64,16 +53,23 @@ ERR InsertElement(List* list, Element* element, unsigned short position)
 
 }
 
-ERR AddElement(void* object, List* list, unsigned short position)
+ERR NewElement(void* value, List* list, short position)
 {
+    if(list == NULL)
+        return 1;
     Element* new    = (Element*)malloc(sizeof(Element));
-    new->object      = object;
+    new->value      = value;
     new->next       = NULL;
     return InsertElement(list, new, position);
 }
 
-Element* GetElement(List* list, unsigned short position)
+Element* GetElement(List* list, short position)
 {
+    if(list == NULL)
+        return NULL;
+    if(list->start == NULL || position >= list->size)
+        return NULL;
+
     Element* element = list->start;
 
     if(position < 0)
@@ -93,8 +89,21 @@ Element* GetElement(List* list, unsigned short position)
     return element;
 }
 
-Element* RemoveElement(List* list, unsigned short position)
+void* GetValue(List* list, short position)
 {
+    Element* tmp = GetElement(list, position);
+    if(tmp == NULL)
+        return NULL;
+    return tmp->value;
+}
+
+Element* RemoveElement(List* list, short position)
+{
+    if(list == NULL)
+        return NULL;
+    if(list->start == NULL || position >= list->size)
+        return NULL;
+
     if(position < 0)
         position = list->size - 1;
     Element* element = GetElement(list, position);
@@ -121,7 +130,7 @@ Element* RemoveElement(List* list, unsigned short position)
     return element;
 }
 
-ERR FreeElement(List* list, unsigned short position)
+ERR FreeElement(List* list, short position)
 {
     Element* tmp = RemoveElement(list, position);
     if(tmp == NULL)
@@ -130,19 +139,27 @@ ERR FreeElement(List* list, unsigned short position)
     return 0;
 }
 
-ERR MoveElement(List* list, unsigned short from_pos, unsigned short to_pos)
+ERR MoveElement(List* list, short from_pos, short to_pos)
 {
     if(from_pos == to_pos)
         return 0;
 
     Element* from = RemoveElement(list, from_pos);
+    if(from == NULL)
+        return 1;
     return InsertElement(list, from, to_pos) != 0;
 }
 
-ERR SwitchElements(List* list, unsigned short pos_a, unsigned short pos_b)
+ERR SwitchElements(List* list, short pos_a, short pos_b)
 {
     if(pos_a == pos_b)
         return 0;
+
+    if(list == NULL)
+        return 1;
+    if(list->start == NULL || pos_a > list->size || pos_b > list->size)
+        return 1;
+    
     if(pos_a == -1)
         pos_a = list->size - 1;
     if(pos_b == -1)
@@ -163,6 +180,11 @@ ERR SwitchElements(List* list, unsigned short pos_a, unsigned short pos_b)
 
 void ClearList(List* list)
 {
+    if(list == NULL)
+        return;
+    if(list->start == NULL)
+        return;
+
     Element* element = list->start;
     if(element != NULL)
     {
