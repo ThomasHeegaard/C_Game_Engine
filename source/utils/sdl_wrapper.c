@@ -12,6 +12,7 @@
 
 #include "sdl_wrapper.h"
 #include "../engine/input.h"
+#include "../graphics/texture_bank.h"
 
 
 
@@ -152,6 +153,7 @@ ERR UpdateScreen()
 
 void HandleEvent(SDL_Event* event) 
 {
+/*
     switch(event->type) 
     {
     case SDL_ACTIVEEVENT:
@@ -309,13 +311,15 @@ void HandleEvent(SDL_Event* event)
         break;
     }
     }
+*/
 }
 
 ERR HandleEvents()
 {
     SDL_Event event;
     while(SDL_PollEvent(&event))
-        Handle_Event(&event);
+        HandleEvent(&event);
+    return 0;
 }
 
 ERR ExitSDL()

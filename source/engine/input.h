@@ -12,56 +12,57 @@
 
 #ifndef INPUT_H
 #define INPUT_H
+#include "../utils/sdl_wrapper.h"
 
+/*
+void InputFocus();
 
-void InputFocus() 
+void InputBlur(); 
 
-void InputBlur() 
+void KeyDown(SDL_Keysym sym, SDL_Keymod mod, Uint16 unicode);
 
-void KeyDown(SDLKey sym, SDLMod mod, Uint16 unicode) 
+void KeyUp(SDL_Keysym sym, SDL_Keymod mod, Uint16 unicode);
 
-void KeyUp(SDLKey sym, SDLMod mod, Uint16 unicode) 
+void MouseFocus();
 
-void MouseFocus() 
+void MouseBlur();
 
-void MouseBlur() 
+void MouseMove(int mX, int mY, int relX, int relY, bool Left,bool Right,bool Middle);
 
-void MouseMove(int mX, int mY, int relX, int relY, bool Left,bool Right,bool Middle) 
+void MouseWheel(bool Up, bool Down);
 
-void MouseWheel(bool Up, bool Down) 
+void LButtonDown(int mX, int mY);
 
-void LButtonDown(int mX, int mY) 
+void LButtonUp(int mX, int mY);
 
-void LButtonUp(int mX, int mY) 
+void RButtonDown(int mX, int mY);
 
-void RButtonDown(int mX, int mY) 
+void RButtonUp(int mX, int mY);
 
-void RButtonUp(int mX, int mY) 
+void MButtonDown(int mX, int mY);
 
-void MButtonDown(int mX, int mY) 
+void MButtonUp(int mX, int mY);
 
-void MButtonUp(int mX, int mY) 
+void JoyAxis(Uint8 which,Uint8 axis,Sint16 value);
 
-void JoyAxis(Uint8 which,Uint8 axis,Sint16 value) 
+void JoyButtonDown(Uint8 which,Uint8 button);
 
-void JoyButtonDown(Uint8 which,Uint8 button) 
+void JoyButtonUp(Uint8 which,Uint8 button);
 
-void JoyButtonUp(Uint8 which,Uint8 button) 
+void JoyHat(Uint8 which,Uint8 hat,Uint8 value);
 
-void JoyHat(Uint8 which,Uint8 hat,Uint8 value) 
+void JoyBall(Uint8 which,Uint8 ball,Sint16 xrel,Sint16 yrel);
 
-void JoyBall(Uint8 which,Uint8 ball,Sint16 xrel,Sint16 yrel) 
+void Minimize();
 
-void Minimize() 
+void Restore();
 
-void Restore() 
+void Resize(int w,int h);
 
-void Resize(int w,int h) 
+void Expose();
 
-void Expose() 
+void Exit();
 
-void Exit() 
-
-void User(Uint8 type, int code, void* data1, void* data2) 
-
+void User(Uint8 type, int code, void* data1, void* data2);
+*/
 #endif //INPUT_H

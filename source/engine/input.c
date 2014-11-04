@@ -10,6 +10,8 @@
 =================================== ===== ==== === == = =  =   =    =     =
 */
 
+#include "input.h"
+
 void InputFocus() 
 {
     //Pure virtual, do nothing

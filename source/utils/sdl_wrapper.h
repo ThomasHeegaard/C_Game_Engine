@@ -14,7 +14,6 @@
 #define SDL_WRAPPER_H
 
 #include "global_defines.h"
-#include "../graphics/texture_bank.h"
 #include <SDL2/SDL.h>
 
 //======================================================================================
