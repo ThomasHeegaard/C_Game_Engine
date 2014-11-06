@@ -75,7 +75,7 @@ Sprite* NewSprite(unsigned short texture_id, unsigned char flags)
     return sprite;
 }
 
-ERR DrawSprite(Sprite* sprite)
+ERR RenderSprite(Sprite* sprite)
 {
     RECT src, dst;
     dst.w = sprite->w * sprite->zoom;

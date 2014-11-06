@@ -17,6 +17,7 @@
 #include "../utils/sdl_wrapper.h"
 #include "../graphics/fps_manager.h"
 #include "../graphics/sprite.h"
+#include "../graphics/graphics.h"
 
 Sprite* test;
 Sprite* test2;
@@ -25,6 +26,8 @@ unsigned char flags = 0;
 
 #define INITIALISED 1
 #define CONTINUE    2
+#define UPDATE      4
+#define DRAW        8
 
 
 ERR InitTestController()
@@ -42,6 +45,7 @@ ERR InitTestController()
     test->center_y  = 120;
     test->zoom      = 1.0;
     test->flags |= PLAY;
+    test->z_index   = 1;
 
     test->data[FRAMES]          = 8;
     test->data[TARGET_FPS]      = 15;
@@ -59,11 +63,12 @@ ERR InitTestController()
     test2->center_y  = 120;
     test2->zoom      = 1.0;
     test2->flags |= PLAY;
+    test2->z_index   = 0;
 
     test2->data[FRAMES]          = 8;
     test2->data[TARGET_FPS]      = 25;
 
-    flags = (INITIALISED | CONTINUE);
+    flags = (INITIALISED | CONTINUE | UPDATE | DRAW);
     return 0;
 }
 
@@ -78,7 +83,6 @@ ERR TestControllerLoop()
 {
     while(flags & CONTINUE)
     {
-        ClearScreen();
         SDL_Event event;
         while(SDL_PollEvent(&event) != 0)
         {
@@ -91,15 +95,26 @@ ERR TestControllerLoop()
                 case SDLK_DOWN: test2->center_y += 5; break;
                 case SDLK_LEFT: test2->center_x -= 5; break;
                 case SDLK_RIGHT: test2->center_x += 5; break;
+                case SDLK_SPACE:    flags ^= (UPDATE | DRAW);
                 }
         }
-        test->center_x  += 1;
-        test->center_y  += 1;
-        test->angle     += 2.0;
-        test->zoom      += 0.01;
-        DrawSprite(test);
-        DrawSprite(test2);
-        UpdateScreen();
+
+        if(flags & UPDATE)
+        {
+            test->center_x  += 1;
+            test->center_y  += 1;
+            test->angle     += 2.0;
+            test->zoom      += 0.01;
+        }
+
+        if(flags & DRAW)
+        {
+            ClearScreen();
+            DrawSprite(test);
+            DrawSprite(test2);
+            Render();
+            UpdateScreen();
+        }
         ManageFPS();
     }
     return ExitTestController();

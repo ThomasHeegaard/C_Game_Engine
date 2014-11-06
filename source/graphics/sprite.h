@@ -22,14 +22,14 @@ typedef struct Sprite
 {
     unsigned short  texture_id;
 
-    unsigned short  w;
-    unsigned short  h;
-
     unsigned int    center_x;
     unsigned int    center_y;
+    unsigned char   z_index;
     float           angle;
     float           zoom;
 
+    unsigned short  w;
+    unsigned short  h;
     unsigned char   flags;
     char*           data;
 } Sprite;
@@ -60,7 +60,7 @@ typedef struct Sprite
 Sprite* NewSprite(unsigned short texture_id, unsigned char flags);
 
 //======================================================================================
-ERR DrawSprite(Sprite* sprite);
+ERR RenderSprite(Sprite* sprite);
 
 //======================================================================================
 ERR     FreeSprite(Sprite* sprite);
