@@ -49,9 +49,9 @@ Sprite* NewSprite(unsigned short texture_id, unsigned char flags)
     if(flags & ANIMATION)
     {
         if(flags & MULTILOOP)
-            sprite->data = (unsigned char*)malloc(7 * sizeof(unsigned char));
+            sprite->data = (char*)malloc(7 * sizeof(char));
         else
-            sprite->data = (unsigned char*)malloc(5 * sizeof(unsigned char));
+            sprite->data = (char*)malloc(5 * sizeof(char));
         if(sprite->data == NULL)
         {
             fprintf(stderr, "Memory allocation failure for sprite %d", texture_id);
@@ -102,7 +102,6 @@ ERR DrawSprite(Sprite* sprite)
 
     if(DrawTexture(sprite->texture_id, sprite->angle, &src, &dst) != 0)
         return 1;
-
     if(sprite->flags & ANIMATION && sprite->flags & PLAY)
     {
         if(sprite->data[FRAMES_TO_SKIP] <= 0)
@@ -113,12 +112,12 @@ ERR DrawSprite(Sprite* sprite)
             else
                 sprite->data[CURRENT_FRAME]--;
 
-            if(sprite->data[CURRENT_FRAME] > sprite->data[FRAMES])
+            if(sprite->data[CURRENT_FRAME] >= sprite->data[FRAMES])
             {
                 if(sprite->flags & OSCILLATING)
                 {
                     sprite->data[DIRECTION] = 1;
-                    sprite->data[CURRENT_FRAME] = sprite->data[FRAMES] - 1;
+                    sprite->data[CURRENT_FRAME] = sprite->data[FRAMES] - 2;
                 }
                 else
                     sprite->data[CURRENT_FRAME] = 0;
@@ -131,7 +130,7 @@ ERR DrawSprite(Sprite* sprite)
                     sprite->data[CURRENT_FRAME] = 1;
                 }
                 else
-                    sprite->data[CURRENT_FRAME] = sprite->data[FRAMES];
+                    sprite->data[CURRENT_FRAME] = sprite->data[FRAMES] - 1;
             }
         }
         else

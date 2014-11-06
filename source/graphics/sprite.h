@@ -31,7 +31,7 @@ typedef struct Sprite
     float           zoom;
 
     unsigned char   flags;
-    unsigned char*  data;
+    char*           data;
 } Sprite;
 
 
