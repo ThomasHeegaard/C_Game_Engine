@@ -14,6 +14,7 @@
 #define SPRITE_H
 
 #include "../utils/global_defines.h"
+#include "texture_bank.h"
 
 //======================================================================================
 //                  DATA
@@ -63,7 +64,7 @@ Sprite* NewSprite(unsigned short texture_id, unsigned char flags);
 ERR RenderSprite(Sprite* sprite);
 
 //======================================================================================
-ERR     FreeSprite(Sprite* sprite);
+ERR FreeSprite(Sprite* sprite);
 
 //=====================================================================================Ri
 

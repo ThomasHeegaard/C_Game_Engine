@@ -12,6 +12,7 @@
 
 #include "graphics.h"
 #include "../utils/sdl_wrapper.h"
+#include "../graphics/fps_manager.h"
 
 typedef struct SpriteStack
 {
@@ -26,7 +27,7 @@ ERR DrawSprite(Sprite* sprite)
     if(spritestack == NULL)
     {
         spritestack = (SpriteStack*)malloc(sizeof(SpriteStack));
-        spritestack->sprite = NULL;
+        spritestack->sprite = sprite;
         spritestack->next = NULL;
         return 0;
     }
@@ -37,20 +38,14 @@ ERR DrawSprite(Sprite* sprite)
     new->sprite = sprite;
     new->next = NULL;
 
-    if(spritestack->next == NULL)
+    if(sprite->z_index < spritestack->sprite->z_index)
     {
-        spritestack->next = new;
+        new->next = spritestack;
+        spritestack = new;
         return 0;
     }
 
     SpriteStack* tmp = spritestack;
-
-    if(new->sprite->z_index < spritestack->next->sprite->z_index)
-    {
-        new->next = spritestack->next;
-        spritestack->next = new;
-        return 0;
-    }
 
     while(tmp->sprite->z_index < sprite->z_index && tmp->next != NULL)
         tmp = tmp->next;
@@ -65,10 +60,10 @@ ERR Render()
 {
     if(spritestack == NULL)
         return 0;
-    if(spritestack->next == NULL)
-        return 0;
     
-    SpriteStack*    tmp = spritestack->next;
+    ClearScreen();
+
+    SpriteStack*    tmp = spritestack;
     SpriteStack*    del;
     ERR             errors;
 
@@ -81,6 +76,9 @@ ERR Render()
     }
     errors += RenderSprite(tmp->sprite);
     free(tmp);
-    spritestack->next = NULL;
+    spritestack = NULL;
+
+    UpdateScreen();
+    ManageFPS();
     return errors;
 }

@@ -15,12 +15,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../utils/sdl_wrapper.h"
-#include "../graphics/fps_manager.h"
+#include "entity.h"
+#include "entity_bank.h"
 #include "../graphics/sprite.h"
 #include "../graphics/graphics.h"
 
-Sprite* test;
-Sprite* test2;
+Entity* test;
+Entity* test2;
 
 unsigned char flags = 0;
 
@@ -32,41 +33,26 @@ unsigned char flags = 0;
 
 ERR InitTestController()
 {
-    test = NewSprite(0, ANIMATION);
+    test = NewEntity(TEST_ENTITY);
     if(test == NULL)
-    {
-        fprintf(stderr, "FAIL");
         return 1;
-    }
-
-    test->w         = 64;
-    test->h         = 64;
-    test->center_x  = 120;
-    test->center_y  = 120;
-    test->zoom      = 1.0;
-    test->flags |= PLAY;
-    test->z_index   = 1;
-
-    test->data[FRAMES]          = 8;
-    test->data[TARGET_FPS]      = 15;
-
-    test2 = NewSprite(0, ANIMATION);
+    test2 = NewEntity(TEST_ENTITY);
     if(test2 == NULL)
     {
-        fprintf(stderr, "FAIL");
+        free(test);
         return 1;
     }
 
-    test2->w         = 64;
-    test2->h         = 64;
-    test2->center_x  = 220;
-    test2->center_y  = 120;
-    test2->zoom      = 1.0;
-    test2->flags |= PLAY;
-    test2->z_index   = 0;
+    test->center_x          = 120;
+    test->center_y          = 120;
 
-    test2->data[FRAMES]          = 8;
-    test2->data[TARGET_FPS]      = 25;
+    test2->center_x         = 220;
+    test2->center_y         = 120;
+    test2->angular_speed    = 2;
+    test2->x_speed          = 1;
+    test2->y_speed          = 1;
+    test2->sprite->z_index  = 4;
+
 
     flags = (INITIALISED | CONTINUE | UPDATE | DRAW);
     return 0;
@@ -74,8 +60,8 @@ ERR InitTestController()
 
 ERR ExitTestController()
 {
-    FreeSprite(test);
-    FreeSprite(test2);
+    FreeEntity(test);
+    FreeEntity(test2);
     return 0;
 }
 
@@ -91,31 +77,35 @@ ERR TestControllerLoop()
             else if(event.type == SDL_KEYDOWN)
                 switch(event.key.keysym.sym)
                 {
-                case SDLK_UP: test2->center_y -= 5; break;
-                case SDLK_DOWN: test2->center_y += 5; break;
-                case SDLK_LEFT: test2->center_x -= 5; break;
-                case SDLK_RIGHT: test2->center_x += 5; break;
-                case SDLK_SPACE:    flags ^= (UPDATE | DRAW);
+                case SDLK_UP: test->y_speed     = -5.0; break;
+                case SDLK_DOWN: test->y_speed   = 5.0; break;
+                case SDLK_LEFT: test->x_speed   = -5.0; break;
+                case SDLK_RIGHT: test->x_speed  = 5.0; break;
+                case SDLK_SPACE: flags ^= (UPDATE | DRAW);
+                }
+            else if(event.type == SDL_KEYUP)
+                switch(event.key.keysym.sym)
+                {
+                case SDLK_UP: test->y_speed     = 0.0; break;
+                case SDLK_DOWN: test->y_speed   = 0.0; break;
+                case SDLK_LEFT: test->x_speed   = 0.0; break;
+                case SDLK_RIGHT: test->x_speed  = 0.0; break;
                 }
         }
 
         if(flags & UPDATE)
         {
-            test->center_x  += 1;
-            test->center_y  += 1;
-            test->angle     += 2.0;
-            test->zoom      += 0.01;
+            UpdateEntity(test);
+            UpdateEntity(test2);
+            test2->sprite->zoom      += 0.01;
         }
 
         if(flags & DRAW)
         {
-            ClearScreen();
-            DrawSprite(test);
-            DrawSprite(test2);
+            DrawEntity(test);
+            DrawEntity(test2);
             Render();
-            UpdateScreen();
         }
-        ManageFPS();
     }
     return ExitTestController();
 }

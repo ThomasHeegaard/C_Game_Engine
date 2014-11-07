@@ -29,6 +29,8 @@ typedef struct Entity
     float           angular_speed;
 
     unsigned short  bounding_diameter;
+
+    Sprite*         sprite;
 } Entity;
 
 Entity* NewEntity(unsigned short type);

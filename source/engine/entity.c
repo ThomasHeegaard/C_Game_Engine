@@ -11,23 +11,17 @@
 */
 
 #include "entity.h"
-
+#include "entity_bank.h"
+#include "../graphics/graphics.h"
+#include <stdlib.h>
 
 Entity* NewEntity(unsigned short type)
 {
-    Entity* entity = (Entity*)malloc(sizeof(Entity));
-    if(entity == NULL)
-        return NULL;
-
     switch(type)
     {
-    default:
-    {
-        free(entity);
-        return NULL;
+        case TEST_ENTITY: return NewTestEntity();
     }
-    }
-    return entity;
+    return NULL;
 }
 
 ERR UpdateEntity(Entity* entity)
@@ -37,9 +31,7 @@ ERR UpdateEntity(Entity* entity)
 
     switch(entity->type)
     {
-    
-    default:
-        return 1;
+        case TEST_ENTITY: return UpdateTestEntity(entity); 
     }
     return 1;
 }
@@ -48,7 +40,12 @@ ERR DrawEntity(Entity* entity)
 {
     if(entity == NULL)
         return 1;
-    return DrawSprite(entity->sprite);
+
+    switch(entity->type)
+    {
+        case TEST_ENTITY: return DrawSprite(entity->sprite);
+    }
+    return 1;
 }
 
 ERR FreeEntity(Entity* entity)
@@ -56,13 +53,13 @@ ERR FreeEntity(Entity* entity)
     if(entity == NULL)
         return 1;
     
-    ERR error = 0;
     switch(entity->type)
     {
-    
-    default:
-        error += 1;
+        case TEST_ENTITY: return FreeTestEntity(entity); 
     }
+
+    if(entity->sprite != NULL)
+        FreeSprite(entity->sprite);
     free(entity);
-    return error;
+    return 1;
 }
