@@ -41,4 +41,6 @@ ERR     DrawEntity(Entity* entity);
 
 ERR     FreeEntity(Entity* entity);
 
+Entity*     LoadEntity(const char* entity_file);
+
 #endif //ENTITY_H
