@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS= -g -Wall
 LDFLAGS= -lm -lSDL2
-SOURCES= source/utils/sdl_wrapper.c source/utils/list.c source/graphics/fps_manager.c source/graphics/sprite.c source/graphics/graphics.c source/engine/entity.c source/engine/test_entity.c source/engine/test_controller.c source/main.c
+SOURCES= source/utils/sdl_wrapper.c source/utils/list.c source/graphics/fps_manager.c source/graphics/sprite.c source/graphics/graphics.c source/engine/entity.c source/engine/test_entity.c source/engine/ship_entity.c source/engine/test_controller.c source/main.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE= test
 

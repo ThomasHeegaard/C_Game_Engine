@@ -33,7 +33,7 @@ unsigned char flags = 0;
 
 ERR InitTestController()
 {
-    test = NewEntity(TEST_ENTITY);
+    test = NewEntity(SHIP_ENTITY);
     if(test == NULL)
         return 1;
     test2 = NewEntity(TEST_ENTITY);

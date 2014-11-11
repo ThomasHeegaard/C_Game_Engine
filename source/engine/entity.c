@@ -20,6 +20,7 @@ Entity* NewEntity(unsigned short type)
     switch(type)
     {
         case TEST_ENTITY: return NewTestEntity();
+        case SHIP_ENTITY: return NewShipEntity();
     }
     return NULL;
 }
@@ -32,6 +33,7 @@ ERR UpdateEntity(Entity* entity)
     switch(entity->type)
     {
         case TEST_ENTITY: return UpdateTestEntity(entity); 
+        case SHIP_ENTITY: return UpdateShipEntity(entity);
     }
     return 1;
 }
@@ -44,6 +46,7 @@ ERR DrawEntity(Entity* entity)
     switch(entity->type)
     {
         case TEST_ENTITY: return DrawSprite(entity->sprite);
+        case SHIP_ENTITY: return DrawSprite(entity->sprite);
     }
     return 1;
 }
@@ -55,7 +58,8 @@ ERR FreeEntity(Entity* entity)
     
     switch(entity->type)
     {
-        case TEST_ENTITY: return FreeTestEntity(entity); 
+        case TEST_ENTITY: return FreeTestEntity(entity);
+        case SHIP_ENTITY: return FreeShipEntity(entity);
     }
 
     if(entity->sprite != NULL)
