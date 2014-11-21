@@ -11,6 +11,7 @@
 */
 
 #include "config_loader.h"
+#include "live_define.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,6 +26,67 @@ Parameter* config_file = NULL;
 unsigned short parameters = 0;
 const char* current_file = "No config file loaded";
 
+ERR ValidCharacter(char c)
+{
+    if( (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')
+        || c == '_' || c == '|')
+        return 1;
+    return 0;
+}
+
+int StringToInt(const char* str)
+{
+    if(str[0] >= '0' && str[0] <= '9')
+        return atoi(str);
+    return TranslateDefines(str);
+}
+
+int ParseTokens(const char* left, const char* right)
+{
+    int left_int = StringToInt(left);
+    char* tmp = strchr(right, '|');
+    if(tmp == NULL)
+        return (left_int | StringToInt(right));
+    tmp[0] = '\0';
+    tmp++;
+    return (left_int | ParseTokens(right, tmp));
+}
+
+#define NOT_NUMBER  1
+#define TOKENS      2
+
+int ParseParameter(const char* parameter)
+{
+    unsigned char   flags       = 0;
+    unsigned int    i           = 0;
+
+    if(parameter == NULL)
+    {
+        fprintf(stderr, "Null string parse attempt\n");
+        return 0;
+    }
+
+    for(i = 0; parameter[i] != '\0'; i++)
+    {
+        if(parameter[i] == '|')
+        {
+            flags |= TOKENS;
+            flags |= NOT_NUMBER;
+        }
+        else if(parameter[i] < '0' || parameter[i] > '9')
+        {
+            flags |= NOT_NUMBER;
+        }
+    }
+
+    if((flags & NOT_NUMBER) == 0)
+        return atoi(parameter);
+    if((flags & TOKENS) == 0)
+        return TranslateDefines(parameter);
+    return ParseTokens("0", parameter);
+}
+
+//=====================================EXTERNAL===================================
 
 ERR OpenConfigFile(const char* file_name)
 {
@@ -90,7 +152,7 @@ ERR OpenConfigFile(const char* file_name)
                     CloseConfigFile();
                     return 1;
                 }
-                if(line[i] != ' ')
+                if(ValidCharacter(line[i]) == 1)
                 {
                     config_file[parameters].name[j] = line[i];
                     j++;
@@ -104,7 +166,7 @@ ERR OpenConfigFile(const char* file_name)
 
             while(line[i] != '\n' && line[i] != '\r' && line[i] != '\0')
             {
-                if(line[i] != ' ')
+                if(ValidCharacter(line[i]) == 1)
                 {
                     config_file[parameters].value[j] = line[i];
                     j++;
@@ -136,12 +198,11 @@ char* GetParameter(const char* parameter)
     return NULL;
 }
 
+
 int GetParameterInt(const char* parameter)
 {
     char* tmp = GetParameter(parameter);
-    if(tmp == NULL)
-        return 0;
-    return atoi(tmp);
+    return ParseParameter(tmp);
 }
 
 ERR CloseConfigFile()
@@ -157,8 +218,8 @@ ERR CloseConfigFile()
             free(config_file[i].value);
     }
     free(config_file);
+    config_file = NULL;
     current_file = "No config file loaded";
     parameters = 0;
     return 0;
 }
-

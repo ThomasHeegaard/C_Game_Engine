@@ -16,7 +16,6 @@
 #include <stdio.h>
 #include "../utils/sdl_wrapper.h"
 #include "entity.h"
-#include "entity_bank.h"
 #include "../graphics/sprite.h"
 #include "../graphics/graphics.h"
 
@@ -33,10 +32,10 @@ unsigned char flags = 0;
 
 ERR InitTestController()
 {
-    test = LoadEntity("source/ship.entity");
+    test = NewEntity("source/ship.entity");
     if(test == NULL)
         return 1;
-    test2 = NewEntity(TEST_ENTITY);
+    test2 = NewEntity("source/test.entity");
     if(test2 == NULL)
     {
         free(test);

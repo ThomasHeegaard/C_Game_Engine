@@ -12,7 +12,6 @@
 
 #include "test_entity.h"
 #include "../graphics/graphics.h"
-#include "entity_bank.h"
 #include <stdlib.h>
 
 Entity* NewTestEntity()

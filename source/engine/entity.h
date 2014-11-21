@@ -33,14 +33,12 @@ typedef struct Entity
     Sprite*         sprite;
 } Entity;
 
-Entity* NewEntity(unsigned short type);
+Entity* NewEntity(const char* entity_file);
 
 ERR     UpdateEntity(Entity* entity);
 
 ERR     DrawEntity(Entity* entity);
 
 ERR     FreeEntity(Entity* entity);
-
-Entity*     LoadEntity(const char* entity_file);
 
 #endif //ENTITY_H
