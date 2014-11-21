@@ -36,7 +36,12 @@ ERR ValidCharacter(char c)
 
 int StringToInt(const char* str)
 {
-    if(str[0] >= '0' && str[0] <= '9')
+    unsigned char number    = 1;
+    unsigned int  i         = 0;
+    for(i = 0; str[i] != '\0'; i++)
+        if(str[i] < '0' || str[i] > '9')
+            number = 0;
+    if(number == 1)
         return atoi(str);
     return TranslateDefines(str);
 }
