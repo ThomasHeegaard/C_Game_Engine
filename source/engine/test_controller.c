@@ -32,10 +32,10 @@ unsigned char flags = 0;
 
 ERR InitTestController()
 {
-    test = NewEntity("source/ship.entity");
+    test = NewEntity("source/entities/ship.entity");
     if(test == NULL)
         return 1;
-    test2 = NewEntity("source/test.entity");
+    test2 = NewEntity("source/entities/test.entity");
     if(test2 == NULL)
     {
         free(test);
@@ -80,7 +80,7 @@ ERR TestControllerLoop()
                 case SDLK_DOWN: test->y_speed   = 5.0; break;
                 case SDLK_LEFT: test->x_speed   = -5.0; break;
                 case SDLK_RIGHT: test->x_speed  = 5.0; break;
-                case SDLK_SPACE: flags ^= (UPDATE | DRAW);
+                case SDLK_SPACE: test->sprite->data[CURRENT_LOOP] ^= 1;
                 }
             else if(event.type == SDL_KEYUP)
                 switch(event.key.keysym.sym)

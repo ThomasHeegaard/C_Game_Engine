@@ -41,17 +41,29 @@ Entity* NewEntity(const char* entity_file)
     entity->angular_speed       = 0.0;
     entity->bounding_diameter   = GetParameterInt("BOUNDINGDIAMETER");
 
-    const char* sprite_file = GetParameter("SPRITE");
+    char* sprite_file = (char*)malloc(VALUE_LENGTH * sizeof(char));
+    if(sprite_file == NULL)
+    {
+        CloseConfigFile();
+        free(entity);
+        fprintf(stderr, "Memory allocation error\n");
+        return NULL;
+    }
+    GetParameterStr("SPRITE", sprite_file);
 
     CloseConfigFile();
     
     entity->sprite = NewSprite(sprite_file);
+
+    free(sprite_file);
+
     if(entity->sprite == NULL)
     {
         free(entity);
         fprintf(stderr, "Loading sprite failed - Loading entity %s failed\n", entity_file);
         return NULL;
     }
+
     return entity; 
 }
 

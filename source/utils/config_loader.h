@@ -23,7 +23,9 @@
 
 ERR OpenConfigFile(const char* file_name);
 
-char* GetParameter(const char* parameter);
+void GetParameterStr(const char* parameter, char* str);
+                /*Copys the parameter to str
+                    str MUST BE ALLOCATED ALREADY!*/
 
 int GetParameterInt(const char* parameter);
 

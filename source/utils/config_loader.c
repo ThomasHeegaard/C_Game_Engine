@@ -91,22 +91,43 @@ int ParseParameter(const char* parameter)
     return ParseTokens("0", parameter);
 }
 
+char* GetParameter(const char* parameter)
+{
+    if(config_file == NULL)
+        return NULL;
+    int i;
+    for(i = 0; i < parameters; i++)
+    {
+        if(strcmp(parameter, config_file[i].name) == 0)
+            return config_file[i].value;
+    }
+    fprintf(stderr, "Parameter %s not found in %s\n", parameter, current_file);
+    return NULL;
+}
+
 //=====================================EXTERNAL===================================
 
 ERR OpenConfigFile(const char* file_name)
 {
     if(config_file != NULL)
         if(CloseConfigFile() != 0)
+        {
+            fprintf(stderr, "Config file %s already open\n", current_file);
             return 1;
+        }
 
     FILE* file_ptr = fopen(file_name, "r");
     if(file_ptr == NULL)
+    {
+        fprintf(stderr, "Unable to open file %s\n", file_name);
         return 1;
+    }
 
     config_file = (Parameter*)malloc(MAX_PARAMETERS * sizeof(Parameter));
     if(config_file == NULL)
     {
         fclose(file_ptr);
+        fprintf(stderr, "Memory allocation failure\n");
         return 1;
     }
 
@@ -118,6 +139,7 @@ ERR OpenConfigFile(const char* file_name)
     {
         fclose(file_ptr);
         CloseConfigFile();
+        fprintf(stderr, "Memory allocation failure\n");
         return 1;
     }
 
@@ -134,6 +156,7 @@ ERR OpenConfigFile(const char* file_name)
             {
                 fclose(file_ptr);
                 CloseConfigFile();
+                fprintf(stderr, "Memory allocation failure\n");
                 return 1;
             }
             config_file[parameters].value = (char*)malloc(VALUE_LENGTH * sizeof(char));
@@ -142,6 +165,7 @@ ERR OpenConfigFile(const char* file_name)
                 free(config_file[parameters].name);
                 fclose(file_ptr);
                 CloseConfigFile();
+                fprintf(stderr, "Memory allocation failure\n");
                 return 1;
             }
 
@@ -189,20 +213,13 @@ ERR OpenConfigFile(const char* file_name)
     return 0;
 }
 
-char* GetParameter(const char* parameter)
+void GetParameterStr(const char* parameter, char* str)
 {
-    if(config_file == NULL)
-        return NULL;
-    int i;
-    for(i = 0; i < parameters; i++)
-    {
-        if(strcmp(parameter, config_file[i].name) == 0)
-            return config_file[i].value;
-    }
-    fprintf(stderr, "Parameter %s not found in %s\n", parameter, current_file);
-    return NULL;
+    if(str == NULL)
+        fprintf(stderr, "Empty string passed to GetParameterStr\n");
+    else
+        strcpy(str, GetParameter(parameter));
 }
-
 
 int GetParameterInt(const char* parameter)
 {
