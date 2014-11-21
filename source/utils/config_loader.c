@@ -29,7 +29,7 @@ const char* current_file = "No config file loaded";
 ERR ValidCharacter(char c)
 {
     if( (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')
-        || c == '_' || c == '|')
+        || c == '_' || c == '|' || c == '.' || c == '/')
         return 1;
     return 0;
 }

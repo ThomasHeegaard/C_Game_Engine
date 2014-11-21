@@ -14,15 +14,22 @@
 #include "../graphics/graphics.h"
 #include "../utils/config_loader.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 Entity* NewEntity(const char* entity_file)
 {
     if(OpenConfigFile(entity_file) != 0)
+    {
+        fprintf(stderr, "No entity file - Loading entity %s failed\n", entity_file);
         return NULL;
+    }
 
     Entity* entity = (Entity*)malloc(sizeof(Entity));
     if(entity == NULL)
+    {
+        fprintf(stderr, "Memory allocation failure - Loading entity %s failed\n", entity_file);
         return NULL;
+    }
 
     entity->type                = GetParameterInt("ENTITYTYPE");
     entity->flags               = 0;
@@ -34,28 +41,17 @@ Entity* NewEntity(const char* entity_file)
     entity->angular_speed       = 0.0;
     entity->bounding_diameter   = GetParameterInt("BOUNDINGDIAMETER");
 
+    const char* sprite_file = GetParameter("SPRITE");
+
+    CloseConfigFile();
     
-    entity->sprite = NewSprite(GetParameterInt("SPRITENAME"), GetParameterInt("SPRITEFLAGS"));
+    entity->sprite = NewSprite(sprite_file);
     if(entity->sprite == NULL)
     {
         free(entity);
+        fprintf(stderr, "Loading sprite failed - Loading entity %s failed\n", entity_file);
         return NULL;
     }
-
-    entity->sprite->w                   = GetParameterInt("SPRITEWIDTH");
-    entity->sprite->h                   = GetParameterInt("SPRITEHEIGHT");
-    entity->sprite->zoom                = GetParameterInt("SPRITEZOOM");
-    entity->sprite->z_index             = GetParameterInt("SPRITEZINDEX");
-
-    if(entity->sprite->flags & ANIMATION)
-    {
-        entity->sprite->data[FRAMES]    = GetParameterInt("SPRITEFRAMES");
-        entity->sprite->data[TARGET_FPS]= GetParameterInt("SPRITETARGETFPS");
-        if(entity->sprite->flags & MULTILOOP)
-            entity->sprite->data[LOOPS] = GetParameterInt("SPRITELOOPS");
-    }
-   
-    CloseConfigFile();
     return entity; 
 }
 

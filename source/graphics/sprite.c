@@ -11,15 +11,23 @@
 */
 
 #include "../utils/sdl_wrapper.h"
+#include "../utils/config_loader.h"
 #include "fps_manager.h"
 #include "sprite.h"
 
-Sprite* NewSprite(unsigned short texture_id, unsigned char flags)
+Sprite* NewSprite(const char* file)
 {
+    if(OpenConfigFile(file) != 0)
+        return NULL;
+
+    int texture_id  = GetParameterInt("TEXTURE");
+    int flags       = GetParameterInt("FLAGS");
+
     if(texture_bank[texture_id] == NULL)
         if(LoadTexture(texture_id) != 0)
         {
             fprintf(stderr, "Unable to load texture_id %d", texture_id);
+            CloseConfigFile();
             return NULL;
         }
 
@@ -27,6 +35,7 @@ Sprite* NewSprite(unsigned short texture_id, unsigned char flags)
     if(sprite == NULL)
     {
         fprintf(stderr, "Memory allocation failure for sprite %d", texture_id);
+        CloseConfigFile();
         return NULL;
     }
 
@@ -34,16 +43,18 @@ Sprite* NewSprite(unsigned short texture_id, unsigned char flags)
     {
         fprintf(stderr, "Corrupted flags %d for sprite %d", flags, texture_id);
         free(sprite);
+        CloseConfigFile();
         return NULL;
     }
 
     sprite->texture_id  = texture_id;
-    sprite->w           = 0;
-    sprite->h           = 0;
+    sprite->w           = GetParameterInt("WIDTH");
+    sprite->h           = GetParameterInt("HEIGHT");
     sprite->center_x    = 0;
     sprite->center_y    = 0;
+    sprite->z_index     = 0;
     sprite->angle       = 0.0;
-    sprite->zoom        = 1.0;
+    sprite->zoom        = GetParameterInt("ZOOM");
     sprite->flags       = flags;
 
     if(flags & ANIMATION)
@@ -56,22 +67,24 @@ Sprite* NewSprite(unsigned short texture_id, unsigned char flags)
         {
             fprintf(stderr, "Memory allocation failure for sprite %d", texture_id);
             free(sprite);
+            CloseConfigFile();
             return NULL;
         }
-        sprite->data[FRAMES]            = 0;
+        sprite->data[FRAMES]            = GetParameterInt("FRAMES");
         sprite->data[CURRENT_FRAME]     = 0;
         sprite->data[DIRECTION]         = 0;
-        sprite->data[TARGET_FPS]        = 0;
+        sprite->data[TARGET_FPS]        = GetParameterInt("TARGETFPS");
         sprite->data[FRAMES_TO_SKIP]    = 0;
         if(flags & MULTILOOP)
         {
-            sprite->data[LOOPS]         = 0;
+            sprite->data[LOOPS]         = GetParameterInt("LOOPS");
             sprite->data[CURRENT_LOOP]  = 0;
         }
     }
     else
         sprite->data = NULL;
     
+    CloseConfigFile();
     return sprite;
 }
 

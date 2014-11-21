@@ -58,7 +58,7 @@ typedef struct Sprite
 //======================================================================================
 //                  FUNCTIONS
 //======================================================================================
-Sprite* NewSprite(unsigned short texture_id, unsigned char flags);
+Sprite* NewSprite(const char* file);
 
 //======================================================================================
 ERR RenderSprite(Sprite* sprite);
