@@ -80,7 +80,7 @@ ERR TestControllerLoop()
                 case SDLK_DOWN: test->y_speed   = 5.0; break;
                 case SDLK_LEFT: test->x_speed   = -5.0; break;
                 case SDLK_RIGHT: test->x_speed  = 5.0; break;
-                case SDLK_SPACE: test->sprite->data[CURRENT_LOOP] ^= 1;
+                case SDLK_SPACE: test->sprite->data[CURRENT_LOOP] ^= 1; break;
                 }
             else if(event.type == SDL_KEYUP)
                 switch(event.key.keysym.sym)

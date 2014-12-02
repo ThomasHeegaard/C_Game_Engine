@@ -56,6 +56,7 @@ Sprite* NewSprite(const char* file)
     sprite->angle       = 0.0;
     sprite->zoom        = GetParameterInt("ZOOM");
     sprite->flags       = flags;
+    sprite->owner       = NULL;
 
     if(flags & ANIMATION)
     {

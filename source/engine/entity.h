@@ -33,6 +33,16 @@ typedef struct Entity
     Sprite*         sprite;
 } Entity;
 
+//=====================================================================
+//          FLAGS
+//=====================================================================
+
+#define CUSTOM_INIT     1
+#define CUSTOM_UPDATE   2
+#define CUSTOM_DRAW     4
+#define CUSTOM_EXIT     8
+
+
 Entity* NewEntity(const char* entity_file);
 
 ERR     UpdateEntity(Entity* entity);

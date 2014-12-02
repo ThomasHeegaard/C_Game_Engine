@@ -24,6 +24,18 @@ Entity* NewEntity(const char* entity_file)
         return NULL;
     }
 
+    if(GetParameterInt("FLAGS") & CUSTOM_INIT)
+    {
+        switch(GetParameterInt("ENTITYTYPE"))
+        {
+
+        default:
+            fprintf(stderr, "No custom initializer found for entity %s\n", entity_file);
+            CloseConfigFile();
+            return NULL;
+        }
+    }
+
     Entity* entity = (Entity*)malloc(sizeof(Entity));
     if(entity == NULL)
     {
@@ -31,8 +43,8 @@ Entity* NewEntity(const char* entity_file)
         return NULL;
     }
 
-    entity->type                = GetParameterInt("ENTITYTYPE");
-    entity->flags               = 0;
+    entity->type                = GetParameterInt("TYPE");
+    entity->flags               = GetParameterInt("FLAGS");
     entity->center_x            = 0.0;
     entity->center_y            = 0.0;
     entity->angle               = 0.0;
@@ -71,6 +83,16 @@ ERR UpdateEntity(Entity* entity)
 {
     if(entity == NULL)
         return 1;
+    if(entity->flags & CUSTOM_UPDATE)
+    {
+        switch(entity->type)
+        {
+
+        default:
+            fprintf(stderr, "No custom updater found for entity \n");
+            return 1;
+        }
+    }
     if(entity->sprite == NULL)
         return 1;
     
@@ -88,6 +110,16 @@ ERR DrawEntity(Entity* entity)
 {
     if(entity == NULL)
         return 1;
+    if(entity->flags & CUSTOM_DRAW)
+    {
+        switch(entity->type)
+        {
+
+        default:
+            fprintf(stderr, "No custom draw function found for entity\n");
+            return 1;
+        }
+    }
     if(entity->sprite == NULL)
         return 1;
 
@@ -98,6 +130,16 @@ ERR FreeEntity(Entity* entity)
 {
     if(entity == NULL)
         return 1;
+    if(entity->flags & CUSTOM_EXIT)
+    {
+        switch(entity->type)
+        {
+
+        default:
+            fprintf(stderr, "No custom exit function found for entity\n");
+            return 1;
+        }
+    }
     ERR err = 0;
     if(entity->sprite == NULL)
         err++;
