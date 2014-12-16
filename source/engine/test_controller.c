@@ -19,8 +19,9 @@
 #include "../graphics/sprite.h"
 #include "../graphics/graphics.h"
 
-Entity* test;
-Entity* test2;
+Entity* ship;
+Entity* flames;
+Entity* yoshi;
 
 unsigned char flags = 0;
 
@@ -32,25 +33,32 @@ unsigned char flags = 0;
 
 ERR InitTestController()
 {
-    test = NewEntity("source/entities/ship.entity");
-    if(test == NULL)
+    ship = NewEntity("source/entities/ship.entity");
+    if(ship == NULL)
         return 1;
-    test2 = NewEntity("source/entities/test.entity");
-    if(test2 == NULL)
+    flames = NewEntity("source/entities/flames.entity");
+    if(flames == NULL)
     {
-        free(test);
+        FreeEntity(ship);
+        return 1;
+    }
+    yoshi = NewEntity("source/entities/test.entity");
+    if(yoshi == NULL)
+    {
+        FreeEntity(ship);
+        FreeEntity(flames);
         return 1;
     }
 
-    test->center_x          = 120;
-    test->center_y          = 120;
+    ship->center_x          = 120;
+    ship->center_y          = 120;
 
-    test2->center_x         = 220;
-    test2->center_y         = 120;
-    test2->angular_speed    = 2;
-    test2->x_speed          = 1;
-    test2->y_speed          = 1;
-    test2->sprite->z_index  = 4;
+    yoshi->center_x         = 220;
+    yoshi->center_y         = 120;
+    yoshi->angular_speed    = 2;
+    yoshi->x_speed          = 1;
+    yoshi->y_speed          = 1;
+    yoshi->sprite->z_index  = 4;
 
 
     flags = (INITIALISED | CONTINUE | UPDATE | DRAW);
@@ -59,8 +67,9 @@ ERR InitTestController()
 
 ERR ExitTestController()
 {
-    FreeEntity(test);
-    FreeEntity(test2);
+    FreeEntity(ship);
+    FreeEntity(flames);
+    FreeEntity(yoshi);
     return 0;
 }
 
@@ -76,33 +85,37 @@ ERR TestControllerLoop()
             else if(event.type == SDL_KEYDOWN)
                 switch(event.key.keysym.sym)
                 {
-                case SDLK_UP: test->y_speed     = -5.0; break;
-                case SDLK_DOWN: test->y_speed   = 5.0; break;
-                case SDLK_LEFT: test->x_speed   = -5.0; break;
-                case SDLK_RIGHT: test->x_speed  = 5.0; break;
-                case SDLK_SPACE: test->sprite->data[CURRENT_LOOP] ^= 1; break;
+                case SDLK_UP: ship->y_speed     = -5.0; break;
+                case SDLK_DOWN: ship->y_speed   = 5.0; break;
+                case SDLK_LEFT: ship->x_speed   = -5.0; break;
+                case SDLK_RIGHT: ship->x_speed  = 5.0; break;
+                case SDLK_SPACE: ship->sprite->data[CURRENT_LOOP] ^= 1; break;
                 }
             else if(event.type == SDL_KEYUP)
                 switch(event.key.keysym.sym)
                 {
-                case SDLK_UP: test->y_speed     = 0.0; break;
-                case SDLK_DOWN: test->y_speed   = 0.0; break;
-                case SDLK_LEFT: test->x_speed   = 0.0; break;
-                case SDLK_RIGHT: test->x_speed  = 0.0; break;
+                case SDLK_UP: ship->y_speed     = 0.0; break;
+                case SDLK_DOWN: ship->y_speed   = 0.0; break;
+                case SDLK_LEFT: ship->x_speed   = 0.0; break;
+                case SDLK_RIGHT: ship->x_speed  = 0.0; break;
                 }
         }
 
         if(flags & UPDATE)
         {
-            UpdateEntity(test);
-            UpdateEntity(test2);
-            test2->sprite->zoom      += 0.01;
+            UpdateEntity(ship);
+            flames->center_x = ship->center_x;
+            flames->center_y = ship->center_y + ship->sprite->h * ship->sprite->zoom;
+            UpdateEntity(flames);
+            UpdateEntity(yoshi);
+            yoshi->sprite->zoom      += 0.01;
         }
 
         if(flags & DRAW)
         {
-            DrawEntity(test);
-            DrawEntity(test2);
+            DrawEntity(ship);
+            DrawEntity(flames);
+            DrawEntity(yoshi);
             Render();
         }
     }

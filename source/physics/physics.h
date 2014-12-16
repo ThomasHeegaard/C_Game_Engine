@@ -37,9 +37,9 @@ typedef struct PhysicsObject
 
 PhysicsObject* NewPhysicsObject();
 
-ERR AddForce(PhysicsObject target, double x_force, double y_force, double x_pos, double y_pos);
+ERR AddForce(PhysicsObject* target, double x_force, double y_force, double x_pos, double y_pos);
 
-ERR ApplyForces(PhysicsObject object);
+ERR ApplyForces(PhysicsObject* object);
 
 ERR FreePhysicsObject();
 

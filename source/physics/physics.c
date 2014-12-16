@@ -10,11 +10,13 @@
 =================================== ===== ==== === == = =  =   =    =     =
 */
 
+#include <stdlib.h>
+#include <stdio.h>
 #include "physics.h"
 
 Force* NextForce(List* forces)
 {
-    if(forces->size = 0)
+    if(forces->size == 0)
         return NULL;
     Force* tmp = (Force*)GetValue(forces, 0);
     FreeElement(forces, 0);
@@ -30,9 +32,10 @@ PhysicsObject* NewPhysicsObject()
     phys->a_y       = 0;
     phys->a_alpha   = 0;
     phys->forces    = NewList();
+    return phys;
 }
 
-ERR AddForce(PhysicsObject target, double x_force, double y_force, double x_pos, double y_pos)
+ERR AddForce(PhysicsObject* target, double x_force, double y_force, double x_pos, double y_pos)
 {
     Force* force = (Force*)malloc(sizeof(Force));
     if(force == NULL)
@@ -47,7 +50,7 @@ ERR AddForce(PhysicsObject target, double x_force, double y_force, double x_pos,
     return InsertValue(force, target->forces, 0);
 }
 
-ERR ApplyForces(PhysicsObject object)
+ERR ApplyForces(PhysicsObject* object)
 {
     object->a_alpha = 0;
     object->a_x     = 0;
@@ -56,9 +59,9 @@ ERR ApplyForces(PhysicsObject object)
     Force* force = NextForce(object->forces);
     while(force != NULL)
     {
-        object->a_alpha += ((x_pos - object->cog_x)*y_force - (y_pos - object->cog_y)*x_force)/object->mass;
-        object->a_x     += x_force/object->mass;
-        object->a_y     += y_force/object->mass;
+        object->a_alpha += ((force->x_pos - object->cog_x)*force->y_force - (force->y_pos - object->cog_y)*force->x_force)/object->mass;
+        object->a_x     += force->x_force/object->mass;
+        object->a_y     += force->y_force/object->mass;
         free(force);
         force = NextForce(object->forces);
     }
@@ -66,7 +69,7 @@ ERR ApplyForces(PhysicsObject object)
     return 0;
 }
 
-ERR FreePhysicsObject(PhysicsObject object)
+ERR FreePhysicsObject(PhysicsObject* object)
 {
     Force* tmp = NextForce(object->forces);
     while(tmp != NULL)
