@@ -72,9 +72,11 @@ ERR Render()
         errors += RenderSprite(tmp->sprite);
         del = tmp;
         tmp = tmp->next;
+        del->next = NULL;
         free(del);
     }
     errors += RenderSprite(tmp->sprite);
+    tmp->next = NULL;
     free(tmp);
     spritestack = NULL;
 

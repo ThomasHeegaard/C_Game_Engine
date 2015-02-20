@@ -135,6 +135,7 @@ ERR FreeElement(List* list, int position)
     Element* tmp = RemoveElement(list, position);
     if(tmp == NULL)
         return 1;
+    tmp->next = NULL;
     free(tmp);
     return 0;
 }
@@ -214,12 +215,15 @@ void ClearList(List* list)
         Element* next = element->next;
         while(next != NULL)
         {
+            element->next = NULL;
             free(element);
             element = next;
             next = element->next;
         }
+        element->next = NULL;
         free(element);
     }
+    list->start = NULL;
     free(list);
     list = NULL;
 }

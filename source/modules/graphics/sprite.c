@@ -157,7 +157,10 @@ ERR FreeSprite(Sprite* sprite)
     if(sprite == NULL)
         return 1;
     if(sprite->data != NULL)
+    {
         free(sprite->data);
+        sprite->data = NULL;
+    }
     free(sprite);
     return 0;
 }

@@ -144,7 +144,10 @@ ERR FreeEntity(Entity* entity)
     if(entity->sprite == NULL)
         err++;
     else
+    {
         err += FreeSprite(entity->sprite);
+    }
+    entity->sprite = NULL;
     free(entity);
     return err;
 }
