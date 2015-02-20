@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 
-@FilesToScan = ("../graphics/sprite.h",
-                "../graphics/texture_bank.h");
+@FilesToScan = ("../modules/graphics/sprite.h",
+                "../modules/graphics/texture_bank.h");
 
-$OutFile = "utils/live_define.c";
+$OutFile = "../utils/live_define.c";
 
 open (my $out, ">", $OutFile) or die "$OutFile could not be opened: $!";
 

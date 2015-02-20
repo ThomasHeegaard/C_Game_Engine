@@ -11,8 +11,8 @@
 */
 
 #include "entity.h"
-#include "../modules/graphics/graphics.h"
-#include "../utils/config_loader.h"
+#include "graphics.h"
+#include "config_loader.h"
 #include <stdlib.h>
 #include <stdio.h>
 

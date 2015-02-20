@@ -13,8 +13,8 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "../utils/global_defines.h"
-#include "../modules/graphics/sprite.h"
+#include "global_defines.h"
+#include "sprite.h"
 
 typedef struct Entity
 {

@@ -89,7 +89,7 @@ ERR TestControllerLoop()
                 case SDLK_DOWN: ship->y_speed   = 5.0; break;
                 case SDLK_LEFT: ship->x_speed   = -5.0; break;
                 case SDLK_RIGHT: ship->x_speed  = 5.0; break;
-                case SDLK_SPACE: ship->sprite->data[CURRENT_LOOP] ^= 1; break;
+                case SDLK_SPACE: flames->sprite->data[CURRENT_LOOP] ^= 1; break;
                 }
             else if(event.type == SDL_KEYUP)
                 switch(event.key.keysym.sym)

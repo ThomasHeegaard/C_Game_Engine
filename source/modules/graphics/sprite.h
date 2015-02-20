@@ -41,6 +41,7 @@ typedef struct Sprite
 //======================================================================================
 
 //========FLAGS==================
+#define STATIC          0
 #define ANIMATION       1
 #define PLAY            2
 #define OSCILLATING     4

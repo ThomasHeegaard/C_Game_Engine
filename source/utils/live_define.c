@@ -6,6 +6,8 @@
 
 int TranslateDefines(const char* value)
 {
+    if(strcmp("STATIC", value) == 0)
+        return 0;
     if(strcmp("ANIMATION", value) == 0)
         return 1;
     if(strcmp("PLAY", value) == 0)
