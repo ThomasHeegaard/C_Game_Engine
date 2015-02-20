@@ -13,10 +13,10 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "utils/sdl_wrapper.h"
-#include "graphics/fps_manager.h"
-#include "graphics/sprite.h"
-#include "engine/test_controller.h"
+#include "sdl_wrapper.h"
+#include "fps_manager.h"
+#include "sprite.h"
+#include "test_controller.h"
 
 #include <SDL2/SDL.h>
 
