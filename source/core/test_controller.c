@@ -78,7 +78,7 @@ ERR TestControllerLoop()
 {
     while(flags & CONTINUE)
     {
-        AddForce(ship->physics_object, 0.0, 3.0, ship->center_x, ship->center_y);        
+        AddForce(ship->physics_object, 0.0, 1.0, ship->physics_object->cog_x, ship->physics_object->cog_y);        
 
         SDL_Event event;
         while(SDL_PollEvent(&event) != 0)
@@ -94,7 +94,7 @@ ERR TestControllerLoop()
                 case SDLK_RIGHT: ship->x_speed  = 5.0; break;
                 case SDLK_SPACE: 
                     flames->sprite->data[CURRENT_LOOP] ^= 1;
-                    AddForce(ship->physics_object, 0.0, -5.0, ship->center_x, ship->center_y);
+                    AddForce(ship->physics_object, 0.0, -10.0, ship->physics_object->cog_x, ship->physics_object->cog_y);
                     break;
                 }
             else if(event.type == SDL_KEYUP)

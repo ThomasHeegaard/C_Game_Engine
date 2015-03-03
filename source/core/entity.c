@@ -57,6 +57,21 @@ Entity* NewEntity(const char* entity_file)
     entity->sprite              = NULL;
     entity->physics_object      = NULL;
 
+    if(entity->flags & HAS_PHYSICS)
+    {
+        entity->physics_object = NewPhysicsObject();
+        if(entity->physics_object == NULL)
+        {
+            FreeSprite(entity->sprite);
+            free(entity);
+            fprintf(stderr, "Creating physics object failed\n");
+            return NULL;
+        }
+        entity->physics_object->mass = GetParameterInt("MASS");
+        if(entity->physics_object->mass <= 0.1)
+            entity->physics_object->mass = 1.0;
+    }
+
     if(entity->flags & HAS_SPRITE)
     {
         char* sprite_file = (char*)malloc(VALUE_LENGTH * sizeof(char));
@@ -79,21 +94,6 @@ Entity* NewEntity(const char* entity_file)
             fprintf(stderr, "Loading sprite failed - Loading entity %s failed\n", entity_file);
             return NULL;
         }
-    }
-
-    if(entity->flags & HAS_PHYSICS)
-    {
-        entity->physics_object = NewPhysicsObject();
-        if(entity->physics_object == NULL)
-        {
-            FreeSprite(entity->sprite);
-            free(entity);
-            fprintf(stderr, "Creating physics object failed\n");
-            return NULL;
-        }
-        entity->physics_object->mass = GetParameterInt("MASS");
-        if(entity->physics_object->mass <= 0.1)
-            entity->physics_object->mass = 1.0;
     }
 
     CloseConfigFile();
