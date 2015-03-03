@@ -41,6 +41,6 @@ ERR AddForce(PhysicsObject* target, double x_force, double y_force, double x_pos
 
 ERR ApplyForces(PhysicsObject* object);
 
-ERR FreePhysicsObject();
+ERR FreePhysicsObject(PhysicsObject* object);
 
 #endif //PHYSICS_H

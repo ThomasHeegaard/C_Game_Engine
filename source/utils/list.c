@@ -93,7 +93,7 @@ void* GetValue(List* list, int position)
 {
     Element* tmp = GetElement(list, position);
     if(tmp == NULL)
-        return -1;
+        return NULL;
     return tmp->value;
 }
 

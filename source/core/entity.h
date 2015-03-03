@@ -15,6 +15,7 @@
 
 #include "global_defines.h"
 #include "sprite.h"
+#include "physics.h"
 
 typedef struct Entity
 {
@@ -31,6 +32,7 @@ typedef struct Entity
     unsigned short  bounding_diameter;
 
     Sprite*         sprite;
+    PhysicsObject*  physics_object;
 } Entity;
 
 //=====================================================================
@@ -41,6 +43,8 @@ typedef struct Entity
 #define CUSTOM_UPDATE   2
 #define CUSTOM_DRAW     4
 #define CUSTOM_EXIT     8
+#define HAS_SPRITE      16
+#define HAS_PHYSICS     32
 
 
 Entity* NewEntity(const char* entity_file);

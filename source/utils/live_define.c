@@ -40,6 +40,18 @@ int TranslateDefines(const char* value)
         return 2;
     if(strcmp("FIRE_TEX", value) == 0)
         return 3;
+    if(strcmp("CUSTOM_INIT", value) == 0)
+        return 1;
+    if(strcmp("CUSTOM_UPDATE", value) == 0)
+        return 2;
+    if(strcmp("CUSTOM_DRAW", value) == 0)
+        return 4;
+    if(strcmp("CUSTOM_EXIT", value) == 0)
+        return 8;
+    if(strcmp("HAS_SPRITE", value) == 0)
+        return 16;
+    if(strcmp("HAS_PHYSICS", value) == 0)
+        return 32;
 
     fprintf(stderr, "No define found for %s returning 0\n", value);
     return 0;

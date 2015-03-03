@@ -32,6 +32,7 @@ PhysicsObject* NewPhysicsObject()
     phys->a_y       = 0;
     phys->a_alpha   = 0;
     phys->forces    = NewList();
+    phys->mass      = 1;
     return phys;
 }
 
@@ -71,11 +72,13 @@ ERR ApplyForces(PhysicsObject* object)
 
 ERR FreePhysicsObject(PhysicsObject* object)
 {
+    if(object == NULL)
+        return 1;
     Force* tmp = NextForce(object->forces);
     while(tmp != NULL)
     {
         free(tmp);   
-        Force* tmp = NextForce(object->forces);
+        tmp = NextForce(object->forces);
     }
     ClearList(object->forces);
     free(object);

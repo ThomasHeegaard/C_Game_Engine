@@ -94,7 +94,10 @@ int ParseParameter(const char* parameter)
 char* GetParameter(const char* parameter)
 {
     if(config_file == NULL)
+    {
+        fprintf(stderr, "Getting parameter with no config file open\n");
         return NULL;
+    }
     int i;
     for(i = 0; i < parameters; i++)
     {
@@ -224,6 +227,11 @@ void GetParameterStr(const char* parameter, char* str)
 int GetParameterInt(const char* parameter)
 {
     char* tmp = GetParameter(parameter);
+    if(tmp == NULL)
+    {
+        fprintf(stderr, "No parameter gotten, returning 0\n");
+        return 0;
+    }
     return ParseParameter(tmp);
 }
 

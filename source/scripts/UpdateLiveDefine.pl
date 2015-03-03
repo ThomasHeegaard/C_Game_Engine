@@ -1,9 +1,11 @@
 #!/usr/bin/perl
 
-@FilesToScan = ("../modules/graphics/sprite.h",
-                "../modules/graphics/texture_bank.h");
+$CodeDirectory = ("/home/thomas/code/sdl/C_SDL2/source");
+@FilesToScan = ("$CodeDirectory/modules/graphics/sprite.h",
+                "$CodeDirectory/modules/graphics/texture_bank.h",
+                "$CodeDirectory/core/entity.h");
 
-$OutFile = "../utils/live_define.c";
+$OutFile = "$CodeDirectory/utils/live_define.c";
 
 open (my $out, ">", $OutFile) or die "$OutFile could not be opened: $!";
 
@@ -19,7 +21,7 @@ for my $filename (@FilesToScan)
     @file = <$file>;
     for my $line (@file)
     {
-        if($line =~ /.*#define (\S+).+(\d+).*/)
+        if($line =~ /.*#define (\S+)\s+(\d+).*/)
         {
             print "    found $1 -> $2\n";
             print $out "    if(strcmp(\"$1\", value) == 0)\n        return $2;\n";
