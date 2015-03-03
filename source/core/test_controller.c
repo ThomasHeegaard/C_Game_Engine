@@ -30,6 +30,7 @@ unsigned char flags = 0;
 #define CONTINUE    2
 #define UPDATE      4
 #define DRAW        8
+#define ENGINE      16
 
 
 ERR InitTestController()
@@ -78,7 +79,7 @@ ERR TestControllerLoop()
 {
     while(flags & CONTINUE)
     {
-        AddForce(ship->physics_object, 0.0, 1.0, ship->physics_object->cog_x, ship->physics_object->cog_y);        
+        AddForce(ship->physics_object, 0.0, 10.0, ship->physics_object->cog_x, ship->physics_object->cog_y);        
 
         SDL_Event event;
         while(SDL_PollEvent(&event) != 0)
@@ -93,8 +94,9 @@ ERR TestControllerLoop()
                 case SDLK_LEFT: ship->x_speed   = -5.0; break;
                 case SDLK_RIGHT: ship->x_speed  = 5.0; break;
                 case SDLK_SPACE: 
+                    if(event.key.repeat != 0) break;
                     flames->sprite->data[CURRENT_LOOP] ^= 1;
-                    AddForce(ship->physics_object, 0.0, -10.0, ship->physics_object->cog_x, ship->physics_object->cog_y);
+                    flags ^= ENGINE;
                     break;
                 }
             else if(event.type == SDL_KEYUP)
@@ -104,11 +106,18 @@ ERR TestControllerLoop()
                 case SDLK_DOWN: ship->y_speed   = 0.0; break;
                 case SDLK_LEFT: ship->x_speed   = 0.0; break;
                 case SDLK_RIGHT: ship->x_speed  = 0.0; break;
+                case SDLK_SPACE: 
+                    if(event.key.repeat != 0) break;
+                    flames->sprite->data[CURRENT_LOOP] ^= 1;
+                    flags ^= ENGINE;
+                    break;
                 }
         }
 
         if(flags & UPDATE)
         {
+            if(flags & ENGINE)
+                AddForce(ship->physics_object, 0.0, -20.0, ship->physics_object->cog_x, ship->physics_object->cog_y);
             UpdateEntity(ship);
             flames->center_x = ship->center_x;
             flames->center_y = ship->center_y + ship->sprite->h * ship->sprite->zoom;
