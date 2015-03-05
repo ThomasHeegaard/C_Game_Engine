@@ -36,6 +36,19 @@ PhysicsObject* NewPhysicsObject()
     return phys;
 }
 
+PhysicsObject* CopyPhysicsObject(PhysicsObject* original)
+{
+    PhysicsObject* phys = (PhysicsObject*)malloc(sizeof(PhysicsObject));
+    phys->cog_x     = original->cog_x;
+    phys->cog_y     = original->cog_y;
+    phys->a_x       = original->a_x;
+    phys->a_y       = original->a_y;
+    phys->a_alpha   = original->a_alpha;
+    phys->forces    = NewList();
+    phys->mass      = original->mass;
+    return phys;
+}
+
 ERR AddForce(PhysicsObject* target, double x_force, double y_force, double x_pos, double y_pos)
 {
     Force* force = (Force*)malloc(sizeof(Force));

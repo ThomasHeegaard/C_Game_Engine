@@ -13,6 +13,7 @@
 #ifndef EXTRA_MATH_H
 #define EXTRA_MATH_H
 
-
+double RotateOffsetX(double x_offset, double y_offset, double angle);
+double RotateOffsetY(double x_offset, double y_offset, double angle);
 
 #endif //EXTRA_MATH_H

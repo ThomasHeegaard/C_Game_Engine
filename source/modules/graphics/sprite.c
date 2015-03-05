@@ -88,6 +88,68 @@ Sprite* NewSprite(const char* file)
     return sprite;
 }
 
+Sprite* CopySprite(Sprite* original)
+{
+    if(texture_bank[original->texture_id] == NULL)
+        if(LoadTexture(original->texture_id) != 0)
+        {
+            fprintf(stderr, "Unable to load texture_id %d", original->texture_id);
+            return NULL;
+        }
+
+    Sprite* sprite = (Sprite*)malloc(sizeof(Sprite));
+    if(sprite == NULL)
+    {
+        fprintf(stderr, "Memory allocation failure for sprite %d", original->texture_id);
+        return NULL;
+    }
+
+    if(original->flags != 0 && !(original->flags & ANIMATION))
+    {
+        fprintf(stderr, "Corrupted flags %d for sprite %d", original->flags, original->texture_id);
+        free(sprite);
+        return NULL;
+    }
+
+    sprite->texture_id  = original->texture_id;
+    sprite->w           = original->w;
+    sprite->h           = original->h;
+    sprite->center_x    = original->center_x;
+    sprite->center_y    = original->center_y;
+    sprite->z_index     = original->z_index;
+    sprite->angle       = original->angle;
+    sprite->zoom        = original->zoom;
+    sprite->flags       = original->flags;
+
+    if(original->flags & ANIMATION)
+    {
+        if(original->flags & MULTILOOP)
+            sprite->data = (char*)malloc(7 * sizeof(char));
+        else
+            sprite->data = (char*)malloc(5 * sizeof(char));
+        if(sprite->data == NULL)
+        {
+            fprintf(stderr, "Memory allocation failure for sprite %d", original->texture_id);
+            free(sprite);
+            return NULL;
+        }
+        sprite->data[FRAMES]            = original->data[FRAMES];
+        sprite->data[CURRENT_FRAME]     = original->data[CURRENT_FRAME];
+        sprite->data[DIRECTION]         = original->data[DIRECTION];
+        sprite->data[TARGET_FPS]        = original->data[TARGET_FPS];
+        sprite->data[FRAMES_TO_SKIP]    = original->data[FRAMES_TO_SKIP];
+        if(original->flags & MULTILOOP)
+        {
+            sprite->data[LOOPS]         = original->data[LOOPS];
+            sprite->data[CURRENT_LOOP]  = original->data[CURRENT_LOOP];
+        }
+    }
+    else
+        sprite->data = NULL;
+    
+    return sprite;
+}
+
 ERR RenderSprite(Sprite* sprite)
 {
     RECT src, dst;

@@ -9,6 +9,17 @@
 |
 =================================== ===== ==== === == = =  =   =    =     =
 */
+#include <math.h>
+#include <stdio.h>
+#define PI 3.14159265
 
-
-void rotate_offset(int x_offset, int y_offset, double angle, int* center_x, int* center_y)
+double RotateOffsetX(double x_offset, double y_offset, double angle)
+{
+    angle = angle * PI / 180;
+    return cos(angle)*x_offset - sin(angle)*y_offset;
+}
+double RotateOffsetY(double x_offset, double y_offset, double angle)
+{
+    angle = angle * PI / 180;
+    return cos(angle)* y_offset + sin(angle)*x_offset; 
+}

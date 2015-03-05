@@ -27,7 +27,7 @@ typedef struct Entity
     float           angle;
     double          x_speed;
     double          y_speed;
-    float           angular_speed;
+    float           a_speed;
 
     unsigned short  bounding_diameter;
 
@@ -48,6 +48,8 @@ typedef struct Entity
 
 
 Entity* NewEntity(const char* entity_file);
+
+Entity* CopyEntity(Entity* original);
 
 ERR     UpdateEntity(Entity* entity);
 

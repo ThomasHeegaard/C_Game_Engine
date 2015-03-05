@@ -31,7 +31,7 @@ int TranslateDefines(const char* value)
     if(strcmp("CURRENT_LOOP", value) == 0)
         return 6;
     if(strcmp("TEXTURE_COUNT", value) == 0)
-        return 4;
+        return 5;
     if(strcmp("EXAMPLE1_TEX", value) == 0)
         return 0;
     if(strcmp("EXAMPLE2_TEX", value) == 0)
@@ -40,6 +40,8 @@ int TranslateDefines(const char* value)
         return 2;
     if(strcmp("FIRE_TEX", value) == 0)
         return 3;
+    if(strcmp("BOLT_TEX", value) == 0)
+        return 4;
     if(strcmp("CUSTOM_INIT", value) == 0)
         return 1;
     if(strcmp("CUSTOM_UPDATE", value) == 0)

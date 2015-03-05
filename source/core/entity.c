@@ -52,7 +52,7 @@ Entity* NewEntity(const char* entity_file)
     entity->angle               = 0.0;
     entity->x_speed             = 0.0;
     entity->y_speed             = 0.0;
-    entity->angular_speed       = 0.0;
+    entity->a_speed              = 0.0;
     entity->bounding_diameter   = GetParameterInt("BOUNDINGDIAMETER");
     entity->sprite              = NULL;
     entity->physics_object      = NULL;
@@ -62,7 +62,6 @@ Entity* NewEntity(const char* entity_file)
         entity->physics_object = NewPhysicsObject();
         if(entity->physics_object == NULL)
         {
-            FreeSprite(entity->sprite);
             free(entity);
             fprintf(stderr, "Creating physics object failed\n");
             return NULL;
@@ -78,6 +77,8 @@ Entity* NewEntity(const char* entity_file)
         if(sprite_file == NULL)
         {
             CloseConfigFile();
+            if(entity->flags & HAS_PHYSICS)
+                FreePhysicsObject(entity->physics_object);
             free(entity);
             fprintf(stderr, "Memory allocation error\n");
             return NULL;
@@ -90,6 +91,9 @@ Entity* NewEntity(const char* entity_file)
 
         if(entity->sprite == NULL)
         {
+            CloseConfigFile();
+            if(entity->flags & HAS_PHYSICS)
+                FreePhysicsObject(entity->physics_object);
             free(entity);
             fprintf(stderr, "Loading sprite failed - Loading entity %s failed\n", entity_file);
             return NULL;
@@ -99,6 +103,65 @@ Entity* NewEntity(const char* entity_file)
     CloseConfigFile();
 
     return entity; 
+}
+
+Entity* CopyEntity(Entity* original)
+{
+    if(original->flags & CUSTOM_INIT)
+    {
+        switch(original->type)
+        {
+
+        default:
+            fprintf(stderr, "No custom initializer found for copied entity (IMPOSSIBLE!)\n");
+            return NULL;
+        }
+    }
+
+    Entity* entity = (Entity*)malloc(sizeof(Entity));
+    if(entity == NULL)
+    {
+        fprintf(stderr, "Memory allocation failure - copying entity failed\n");
+        return NULL;
+    }
+
+    entity->type                = original->type;
+    entity->flags               = original->flags;
+    entity->center_x            = original->center_x;
+    entity->center_y            = original->center_y;
+    entity->angle               = original->angle;
+    entity->x_speed             = original->x_speed;
+    entity->y_speed             = original->y_speed;
+    entity->a_speed             = original->a_speed;
+    entity->bounding_diameter   = original->bounding_diameter;
+    entity->sprite              = NULL;
+    entity->physics_object      = NULL;
+
+    if(entity->flags & HAS_PHYSICS)
+    {
+        entity->physics_object = CopyPhysicsObject(original->physics_object);
+        if(entity->physics_object == NULL)
+        {
+            free(entity);
+            fprintf(stderr, "Copying physics object failed\n");
+            return NULL;
+        }
+    }
+
+    if(entity->flags & HAS_SPRITE)
+    {
+        entity->sprite = CopySprite(original->sprite);
+
+        if(entity->sprite == NULL)
+        {
+            free(entity);
+            if(entity->flags & HAS_PHYSICS)
+                FreePhysicsObject(entity->physics_object);
+            fprintf(stderr, "copying sprite failed - copying entity failed\n");
+            return NULL;
+        }
+    }
+    return entity;
 }
 
 ERR UpdateEntity(Entity* entity)
@@ -121,14 +184,14 @@ ERR UpdateEntity(Entity* entity)
         ApplyForces(entity->physics_object);
         entity->x_speed         += entity->physics_object->a_x;
         entity->y_speed         += entity->physics_object->a_y;
-        entity->angular_speed   += entity->physics_object->a_alpha;
+        entity->a_speed         += entity->physics_object->a_alpha;
         entity->physics_object->cog_x = entity->center_x;
         entity->physics_object->cog_y = entity->center_y;
     }
     
     entity->center_x        += entity->x_speed;
     entity->center_y        += entity->y_speed;
-    entity->angle           += entity->angular_speed;
+    entity->angle           += entity->a_speed;
 
     if(entity->flags & HAS_SPRITE)
     {

@@ -13,72 +13,49 @@
 #include "graphics.h"
 #include "sdl_wrapper.h"
 #include "fps_manager.h"
+#include "list.h"
 
-typedef struct SpriteStack
-{
-    Sprite*             sprite;
-    struct SpriteStack* next;
-} SpriteStack;
-
-SpriteStack* spritestack = NULL;
+List* sprite_stack = NULL;
 
 ERR DrawSprite(Sprite* sprite)
 {
-    if(spritestack == NULL)
+    if(sprite_stack == NULL)
     {
-        spritestack = (SpriteStack*)malloc(sizeof(SpriteStack));
-        spritestack->sprite = sprite;
-        spritestack->next = NULL;
+        sprite_stack = NewList();
+        InsertValue(sprite, sprite_stack, 0);
         return 0;
     }
 
-    SpriteStack* new = (SpriteStack*)malloc(sizeof(SpriteStack));
-    if(new == NULL)
-        return 1;
-    new->sprite = sprite;
-    new->next = NULL;
-
-    if(sprite->z_index < spritestack->sprite->z_index)
+    int i = 0;
+    Element* ptr = sprite_stack->start;
+    while(i < sprite_stack->size && ((Sprite*)ptr->value)->z_index < sprite->z_index)
     {
-        new->next = spritestack;
-        spritestack = new;
-        return 0;
+        ptr = ptr->next;
+        i++; 
     }
-
-    SpriteStack* tmp = spritestack;
-
-    while(tmp->sprite->z_index < sprite->z_index && tmp->next != NULL)
-        tmp = tmp->next;
-
-    new->next = tmp->next;
-    tmp->next = new;
+    InsertValue(sprite, sprite_stack, i);
 
     return 0;
 }
 
 ERR Render()
 {
-    if(spritestack == NULL)
+    if(sprite_stack == NULL)
         return 0;
     
     ClearScreen();
 
-    SpriteStack*    tmp = spritestack;
-    SpriteStack*    del;
     ERR             errors;
 
-    while(tmp->next != NULL)
+    Element* tmp;
+    while(sprite_stack->size != 0)
     {
-        errors += RenderSprite(tmp->sprite);
-        del = tmp;
-        tmp = tmp->next;
-        del->next = NULL;
-        free(del);
+        tmp = RemoveElement(sprite_stack, 0);
+        errors += RenderSprite((Sprite*)tmp->value);
+        free(tmp);
     }
-    errors += RenderSprite(tmp->sprite);
-    tmp->next = NULL;
-    free(tmp);
-    spritestack = NULL;
+    ClearList(sprite_stack);
+    sprite_stack = NULL;
 
     UpdateScreen();
     ManageFPS();

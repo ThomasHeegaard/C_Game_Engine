@@ -12,6 +12,7 @@ SOURCES= \
 		 source/core/sdl_wrapper.c \
 		 source/utils/live_define.c \
 		 source/utils/list.c \
+		 source/utils/extra_math.c \
 		 source/utils/config_loader.c \
 		 source/modules/graphics/fps_manager.c \
 		 source/modules/graphics/sprite.c \
