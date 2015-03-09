@@ -27,6 +27,6 @@ int Distance(int x_a, int y_a, int x_b, int y_b)
 {
     int dx = x_b - x_a;
     int dy = y_b - y_a;
-    return sqrt(dx*dx - dy*dy);
+    return sqrt(dx*dx + dy*dy);
 }
 

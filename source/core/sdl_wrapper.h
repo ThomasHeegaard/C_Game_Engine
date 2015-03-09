@@ -26,6 +26,7 @@ typedef struct Screen
     SDL_Renderer*   renderer;
 } Screen;
 
+
 typedef struct PixelMap
 {
     SDL_Texture*    texture;
@@ -33,7 +34,7 @@ typedef struct PixelMap
     int             h;
     Vector          pos;
     unsigned short  z_index;
-    Uint32*         pixels;
+    Uint32*          pixels;
 }
 PixelMap;
 
@@ -48,6 +49,7 @@ extern SDL_Texture** texture_bank;
 #define TRANSP_R    255
 #define TRANSP_G    0
 #define TRANSP_B    255
+
 
 //======================================================================================
 //                  FUNCTIONS

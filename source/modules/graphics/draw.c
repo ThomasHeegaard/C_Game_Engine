@@ -29,7 +29,9 @@ ERR DrawPointXY(PixelMap* pm, Color color, int x, int y)
     if(x > pm->w || x < 0 || x < 0 || x < 0 || x < 0 || x < 0 || x < 0 || x < 0 || y > pm->h || y < 0)
         return 1;
 
-    pm->pixels[x + pm->w*y] = ColorToARGB(color);
+    int argb = ColorToARGB(color);
+
+    pm->pixels[x + pm->w*y] = argb;
 
     return 0;
 }
@@ -141,8 +143,8 @@ ERR FillPMap(PixelMap* pm, Color color)
         return 1;
     }
 
-    int i;
     int argb = ColorToARGB(color);
+    int i;
     for(i = 0; i < pm->w * pm->h; i++)
         pm->pixels[i] = argb;
 

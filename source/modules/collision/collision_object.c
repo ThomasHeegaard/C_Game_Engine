@@ -40,7 +40,9 @@ CollisionObject* CopyCollisionObject(CollisionObject* original)
     ret->center_y = original->center_y;
     ret->radius = original->radius;
     ret->element_count = original->element_count;
-    ret->elements = CopyList(original->elements);
+    ret->elements = NULL;
+    if(original->elements != NULL)
+        ret->elements = CopyList(original->elements);
     if(ret->element_count != 0 && ret->elements == NULL)
     {
         fprintf(stderr, "Error copying element list, CopyCollisionObject failed\n");
@@ -116,6 +118,7 @@ ERR CheckCollision(CollisionObject* obj_a, CollisionObject* obj_b)
         return 0;
     if(obj_a->elements == NULL && obj_b->elements == NULL)
         return 1;
+printf("COllision problem\n");
     Element* tmp_a;
     Element* tmp_b;
     tmp_a = obj_a->elements->start;
