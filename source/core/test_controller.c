@@ -21,6 +21,7 @@
 #include "sprite.h"
 #include "physics.h"
 #include "graphics.h"
+#include "draw.h"
 
 Entity* ship;
 Entity* flames;
@@ -28,6 +29,7 @@ Entity* yoshi;
 Entity* bolt;
 Entity* tmp;
 List*   bolts;
+PixelMap* visual_debug;
 
 unsigned char flags = 0;
 
@@ -36,8 +38,6 @@ unsigned char flags = 0;
 #define UPDATE      4
 #define DRAW        8
 #define ENGINE      16
-
-#define FLAME_OFFSET_X 
 
 
 ERR InitTestController()
@@ -63,18 +63,22 @@ ERR InitTestController()
 
     ship->center_x          = 120;
     ship->center_y          = 120;
-    ship->sprite->z_index   = 5;
+    ship->sprite->z_index   = 3;
 
     yoshi->center_x         = 220;
     yoshi->center_y         = 120;
     yoshi->a_speed          = 2;
-    yoshi->x_speed          = 1;
-    yoshi->y_speed          = 1;
+    yoshi->x_speed          = 0;
+    yoshi->y_speed          = 0;
     yoshi->sprite->z_index  = 4;
+    
 
     bolt->sprite->z_index   = 1;
 
     bolts = NewList();
+
+    visual_debug = NewPixelMap(640, 480, (Vector){320, 240}, 10);
+    ClearPMap(visual_debug);
 
     flags = (INITIALISED | CONTINUE | UPDATE | DRAW);
     return 0;
@@ -90,6 +94,7 @@ ERR ExitTestController()
         FreeEntity((Entity*)GetValue(bolts, i));
     ClearList(bolts);
     FreeEntity(bolt);
+    FreePixelMap(visual_debug);
 
     return 0;
 }
@@ -148,6 +153,37 @@ ERR TestControllerLoop()
             if(flags & ENGINE)
                 AddForce(ship->physics_object, RotateOffsetX(0.0, -20.0, ship->angle), RotateOffsetY(0.0, -20.0, ship->angle),
                         ship->physics_object->cog_x, ship->physics_object->cog_y);
+
+            //if(CheckCollision(ship->collision_object, yoshi->collision_object) != 0)
+            //{
+            //    printf("BOOM\n");
+            //    flags ^= CONTINUE;
+            //}
+            Element* el = bolts->start;
+            Entity* tmp = NULL;
+            int i = 0;
+            while(el != NULL)
+            {
+                tmp = (Entity*)el->value;
+                //if(CheckCollision(ship->collision_object, tmp->collision_object) != 0)
+                //{
+                //    printf("BOOM\n");
+                //    flags ^= CONTINUE;
+                //}
+                if(CheckCollision(yoshi->collision_object, tmp->collision_object) != 0)
+                {
+                    AddForce(yoshi->physics_object, RotateOffsetX(0.0, -10.0, tmp->angle), RotateOffsetY(0.0, -10.0, tmp->angle),
+                            yoshi->physics_object->cog_x, yoshi->physics_object->cog_y);
+                    yoshi->sprite->zoom -= 0.5;
+                    if(yoshi->sprite->zoom < 0.5)
+                        yoshi->sprite->zoom = 0.5;
+                    FreeEntity(tmp);
+                    FreeElement(bolts, i);
+                }
+                i++;
+                el = el->next;
+            }
+
             UpdateEntity(ship);
 
             flames->angle = ship->angle;
@@ -157,21 +193,42 @@ ERR TestControllerLoop()
 
             UpdateEntity(yoshi);
             yoshi->sprite->zoom      += 0.01;
+            yoshi->physics_object->mass = yoshi->sprite->zoom * 100;
+            if(yoshi->physics_object->mass < 1)
+                yoshi->physics_object->mass = 1;
+            yoshi->collision_object->radius = 32*yoshi->sprite->zoom;
+            if(yoshi->collision_object->radius < 1)
+                yoshi->collision_object->radius = 1;
 
-            int i;
             for(i = 0; i < bolts->size; i++)
-                UpdateEntity((Entity*)GetValue(bolts, i));
-
+            {
+                Entity* tmp = (Entity*)GetValue(bolts, i);
+                if(tmp->center_x < -15 || tmp->center_y < -15 || tmp->center_x > 1000 || tmp->center_y > 500)
+                {
+                    FreeEntity(tmp);
+                    FreeElement(bolts, i);
+                }
+                else
+                    UpdateEntity(tmp);
+            }
         }
 
         if(flags & DRAW)
         {
+            ClearPMap(visual_debug);
             DrawEntity(ship);
+            DrawCircle(visual_debug, (Vector){ship->center_x, ship->center_y}, ship->collision_object->radius, GREEN);
             DrawEntity(flames);
             DrawEntity(yoshi);
+            DrawCircle(visual_debug, (Vector){yoshi->center_x, yoshi->center_y}, yoshi->collision_object->radius, GREEN);
             int i;
             for(i = 0; i < bolts->size; i++)
-                DrawEntity((Entity*)GetValue(bolts, i));
+            {
+                Entity* tmp = (Entity*)GetValue(bolts, i);
+                DrawEntity(tmp);
+                DrawCircle(visual_debug, (Vector){tmp->center_x, tmp->center_y}, tmp->collision_object->radius, GREEN);
+            }
+            DrawPixelMap(visual_debug);
             Render();
         }
     }

@@ -15,47 +15,93 @@
 #include "fps_manager.h"
 #include "list.h"
 
-List* sprite_stack = NULL;
-
-ERR DrawSprite(Sprite* sprite)
+typedef struct Image
 {
-    if(sprite_stack == NULL)
+    Sprite* sprite;
+    PixelMap* pixel_map;
+    unsigned char z_index;
+}
+Image;
+
+List* graphics_stack = NULL;
+
+ERR InsertImage(Image* image)
+{
+    if(graphics_stack == NULL)
     {
-        sprite_stack = NewList();
-        InsertValue(sprite, sprite_stack, 0);
+        graphics_stack = NewList();
+        InsertValue(image, graphics_stack, 0);
         return 0;
     }
 
     int i = 0;
-    Element* ptr = sprite_stack->start;
-    while(i < sprite_stack->size && ((Sprite*)ptr->value)->z_index < sprite->z_index)
+    Element* ptr = graphics_stack->start;
+    while(i < graphics_stack->size && ((Image*)ptr->value)->z_index < image->z_index)
     {
         ptr = ptr->next;
         i++; 
     }
-    InsertValue(sprite, sprite_stack, i);
+    InsertValue(image, graphics_stack, i);
 
     return 0;
 }
 
+ERR DrawSprite(Sprite* sprite)
+{
+    if(sprite == NULL)
+        return 1;
+
+    Image* image = (Image*)malloc(sizeof(Image));
+    image->sprite = sprite;
+    image->pixel_map = NULL;
+    image->z_index = sprite->z_index;
+
+    return InsertImage(image);
+}
+
+ERR DrawPixelMap(PixelMap* pm)
+{
+    if(pm == NULL)
+        return 1;
+
+    Image* image = (Image*)malloc(sizeof(Image));
+    image->sprite = NULL;
+    image->pixel_map = pm;
+    image->z_index = pm->z_index;
+
+    return InsertImage(image);
+}
+
 ERR Render()
 {
-    if(sprite_stack == NULL)
+    if(graphics_stack == NULL)
         return 0;
     
     ClearScreen();
 
-    ERR             errors;
+    ERR errors = 0;
 
     Element* tmp;
-    while(sprite_stack->size != 0)
+    Image* tmp_image;
+    while(graphics_stack->size != 0)
     {
-        tmp = RemoveElement(sprite_stack, 0);
-        errors += RenderSprite((Sprite*)tmp->value);
+        tmp = RemoveElement(graphics_stack, 0);
+        tmp_image = (Image*)tmp->value;
+        if(tmp_image->pixel_map == NULL)
+        {
+            errors += RenderSprite(tmp_image->sprite);
+        }
+        else if(tmp_image->sprite == NULL)
+        {
+            errors += RenderPixelMap(tmp_image->pixel_map);
+        }
+        else
+            errors += 1;
+        free(tmp_image);
         free(tmp);
     }
-    ClearList(sprite_stack);
-    sprite_stack = NULL;
+    ClearList(graphics_stack);
+    graphics_stack = NULL;
 
     UpdateScreen();
     ManageFPS();

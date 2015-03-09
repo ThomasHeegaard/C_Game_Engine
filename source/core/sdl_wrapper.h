@@ -26,6 +26,17 @@ typedef struct Screen
     SDL_Renderer*   renderer;
 } Screen;
 
+typedef struct PixelMap
+{
+    SDL_Texture*    texture;
+    int             w;
+    int             h;
+    Vector          pos;
+    unsigned short  z_index;
+    Uint32*         pixels;
+}
+PixelMap;
+
 extern SDL_Texture** texture_bank;
 
 //======================================================================================
@@ -52,6 +63,12 @@ ERR DrawTexture(unsigned short texture_id, float angle,
 
 //======================================================================================
 void FreeTexture(unsigned short texture_id);
+
+PixelMap* NewPixelMap(int w, int h, Vector pos, unsigned short z_index);
+
+ERR RenderPixelMap(PixelMap* pm);
+
+void FreePixelMap(PixelMap* pm);
 
 //======================================================================================
 ERR ClearScreen();

@@ -15,4 +15,11 @@
 
 #define ERR unsigned char
 
+typedef struct Vector
+{
+    int x;
+    int y;
+}
+Vector;
+
 #endif //GLOBAL_DEFINES_H

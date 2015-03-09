@@ -28,12 +28,31 @@ List* NewList()
     return list;
 }
 
+List* CopyList(List* original)
+{
+    if(original == NULL)
+        return NULL;
+    List* ret = NewList();
+    if(ret == NULL)
+        return NULL;
+    Element* ptr = original->start;
+    while(ptr != NULL)
+    {
+        InsertValue(ptr->value, ret, -1);
+        ptr = ptr->next;
+    }
+    return ret;
+}  
+
 ERR InsertElement(List* list, Element* element, int position)
 {
     if(list == NULL || element == NULL)
         return 1;
-    if(position > 0 && (position >= list->size || list->start == NULL))
+    if(position > 0 && (position > list->size || list->start == NULL))
         return 1;
+
+    if(position == list->size)
+        position = -1;
 
     if(position == 0 || list->start == NULL)
     {

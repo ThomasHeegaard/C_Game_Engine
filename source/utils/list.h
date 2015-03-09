@@ -37,6 +37,9 @@ typedef struct List
 List* NewList();    //New empty list, with no elements
                     //and size 0
 
+List* CopyList(List* original);   
+                    //returns a new list identical to the original
+
 //=============================================================
 ERR InsertElement(List* list, Element* element, int position);
                     //Inserts given element into the given

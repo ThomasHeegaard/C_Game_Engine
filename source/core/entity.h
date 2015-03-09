@@ -16,23 +16,25 @@
 #include "global_defines.h"
 #include "sprite.h"
 #include "physics.h"
+#include "collision_object.h"
 
 typedef struct Entity
 {
     unsigned short  type;
     unsigned char   flags;
 
-    double          center_x;
-    double          center_y;
-    float           angle;
-    double          x_speed;
-    double          y_speed;
-    float           a_speed;
+    double              center_x;
+    double              center_y;
+    float               angle;
+    double              x_speed;
+    double              y_speed;
+    float               a_speed;
 
-    unsigned short  bounding_diameter;
+    unsigned short      bounding_diameter;
 
-    Sprite*         sprite;
-    PhysicsObject*  physics_object;
+    Sprite*             sprite;
+    PhysicsObject*      physics_object;
+    CollisionObject*    collision_object;
 } Entity;
 
 //=====================================================================
@@ -45,6 +47,7 @@ typedef struct Entity
 #define CUSTOM_EXIT     8
 #define HAS_SPRITE      16
 #define HAS_PHYSICS     32
+#define HAS_COLLISION   64
 
 
 Entity* NewEntity(const char* entity_file);

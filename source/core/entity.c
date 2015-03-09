@@ -52,10 +52,11 @@ Entity* NewEntity(const char* entity_file)
     entity->angle               = 0.0;
     entity->x_speed             = 0.0;
     entity->y_speed             = 0.0;
-    entity->a_speed              = 0.0;
+    entity->a_speed             = 0.0;
     entity->bounding_diameter   = GetParameterInt("BOUNDINGDIAMETER");
     entity->sprite              = NULL;
     entity->physics_object      = NULL;
+    entity->collision_object    = NULL;
 
     if(entity->flags & HAS_PHYSICS)
     {
@@ -71,6 +72,19 @@ Entity* NewEntity(const char* entity_file)
             entity->physics_object->mass = 1.0;
     }
 
+    if(entity->flags & HAS_COLLISION)
+    {
+        entity->collision_object = NewCollisionObject();
+        if(entity->collision_object == NULL)
+        {
+            FreePhysicsObject(entity->physics_object);
+            free(entity);
+            fprintf(stderr, "Creating collision object failed\n");
+            return NULL;
+        }
+        entity->collision_object->radius = entity->bounding_diameter;
+    }
+
     if(entity->flags & HAS_SPRITE)
     {
         char* sprite_file = (char*)malloc(VALUE_LENGTH * sizeof(char));
@@ -79,6 +93,8 @@ Entity* NewEntity(const char* entity_file)
             CloseConfigFile();
             if(entity->flags & HAS_PHYSICS)
                 FreePhysicsObject(entity->physics_object);
+            if(entity->flags & HAS_COLLISION)
+                FreeCollisionObject(entity->collision_object);
             free(entity);
             fprintf(stderr, "Memory allocation error\n");
             return NULL;
@@ -94,6 +110,8 @@ Entity* NewEntity(const char* entity_file)
             CloseConfigFile();
             if(entity->flags & HAS_PHYSICS)
                 FreePhysicsObject(entity->physics_object);
+            if(entity->flags & HAS_COLLISION)
+                FreeCollisionObject(entity->collision_object);
             free(entity);
             fprintf(stderr, "Loading sprite failed - Loading entity %s failed\n", entity_file);
             return NULL;
@@ -148,15 +166,30 @@ Entity* CopyEntity(Entity* original)
         }
     }
 
+    if(entity->flags & HAS_COLLISION)
+    {
+        entity->collision_object = CopyCollisionObject(original->collision_object);
+        if(entity->collision_object == NULL)
+        {
+            if(entity->flags & HAS_PHYSICS)
+                FreePhysicsObject(entity->physics_object);
+            free(entity);
+            fprintf(stderr, "Copying collision object failed\n");
+            return NULL;
+        }
+    }
+
     if(entity->flags & HAS_SPRITE)
     {
         entity->sprite = CopySprite(original->sprite);
 
         if(entity->sprite == NULL)
         {
-            free(entity);
             if(entity->flags & HAS_PHYSICS)
                 FreePhysicsObject(entity->physics_object);
+            if(entity->flags & HAS_COLLISION)
+                FreeCollisionObject(entity->collision_object);
+            free(entity);
             fprintf(stderr, "copying sprite failed - copying entity failed\n");
             return NULL;
         }
@@ -192,6 +225,12 @@ ERR UpdateEntity(Entity* entity)
     entity->center_x        += entity->x_speed;
     entity->center_y        += entity->y_speed;
     entity->angle           += entity->a_speed;
+
+    if(entity->flags & HAS_COLLISION)
+    {
+        entity->collision_object->center_x = entity->center_x;
+        entity->collision_object->center_y = entity->center_y;
+    }
 
     if(entity->flags & HAS_SPRITE)
     {

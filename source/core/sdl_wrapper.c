@@ -128,6 +128,66 @@ void FreeTexture(unsigned short texture_id)
     texture_bank[texture_id] = NULL;
 }
 
+PixelMap* NewPixelMap(int w, int h, Vector pos, unsigned short z_index)
+{
+    PixelMap* ret = (PixelMap*)malloc(sizeof(PixelMap));
+    if(ret == NULL)
+    {
+        fprintf(stderr, "Memory allocation failure, pixel map creation failed\n");
+        return NULL;
+    }
+    ret->texture = SDL_CreateTexture(screen->renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, w, h);
+    if(ret->texture == NULL)
+    {
+        fprintf(stderr, "Error creating pixel map texture\n");
+        free(ret);
+        return NULL;
+    }
+    SDL_SetTextureBlendMode(ret->texture, SDL_BLENDMODE_ADD);
+
+    ret->w          = w;
+    ret->h          = h;
+    ret->pos        = pos;
+    ret->z_index    = z_index;
+    ret->pixels     = (Uint32*)malloc(w * h * sizeof(Uint32));
+
+    if(ret->pixels == NULL)
+    {
+        fprintf(stderr, "Memory allocation failure, pixel map creation failed\n");
+        SDL_DestroyTexture(ret->texture);
+        free(ret);
+        return NULL;
+    }
+    return ret;
+}
+
+ERR RenderPixelMap(PixelMap* pm)
+{
+    if(pm == NULL)
+    {
+        fprintf(stderr, "Drawing NULL pixel map\n");
+        return 1;
+    }
+
+    SDL_UpdateTexture(pm->texture, NULL, pm->pixels, pm->w * sizeof(Uint32));
+    SDL_Rect dstrect;
+    dstrect.x = pm->pos.x - pm->w/2;
+    dstrect.y = pm->pos.y - pm->h/2;
+    dstrect.w = pm->w;
+    dstrect.h = pm->h;
+    SDL_RenderCopy(screen->renderer, pm->texture, NULL, &dstrect); 
+    return 0;
+}
+
+void FreePixelMap(PixelMap* pm)
+{
+    SDL_DestroyTexture(pm->texture);
+    pm->texture = NULL;
+    free(pm->pixels);
+    pm->pixels = NULL;
+    free(pm);
+}
+
 ERR ClearScreen()
 {
     if(screen == NULL)

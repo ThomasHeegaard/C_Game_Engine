@@ -13,37 +13,46 @@
 #ifndef COLLISION_OBJECT_H
 #define COLLISION_OBJECT_H
 
-typedef struct Collision_Element
+#include "global_defines.h"
+#include "list.h"
+
+typedef struct CollisionElement
 {
     unsigned char   shape;
     int             x_offset;
     int             y_offset;
     int             width;
     int             height;
-    double          angle;
+    double          angular_offset;
 }
-Shape;
+CollisionElement;
 
-typedef struct Collision_Object
+typedef struct CollisionObject
 {
     int                 center_x;
     int                 center_y;
-    int                 max_radius;
+    int                 radius;
     unsigned char       element_count;
-    Collision_Element*  elements;   
+    List*  elements;   
 }
-Collision_Object;
+CollisionObject;
 
-Collision_Object* NewCollisionObject(int c_x, int c_y);
 
-ERR AddCollisionElement(Collision_Object* obj, unsigned char shape, int x, int y, int w, int h, int a);
+#define SQUARE_SHAPE 0
+#define CIRCLE_SHAPE 1
 
-ERR FreeCollisionObject(Collision_Object* obj);
 
-ERR CheckCOllision(Collision_Object* obj_a, Collision_Object* obj_b);
+CollisionObject* NewCollisionObject();
 
-#define SQUARE_SHAPE 0;
-#define CIRCLE_SHAPE 1;
+CollisionObject* CopyCollisionObject(CollisionObject* original);
+
+ERR AddCollisionElement(CollisionObject* obj, unsigned char shape, int dx, int dy, int w, int h, double da);
+    //Adds a collision element to the object, at offsets dx, dy, da to the center of that element
+
+ERR FreeCollisionObject(CollisionObject* obj);
+
+ERR CheckCollision(CollisionObject* obj_a, CollisionObject* obj_b);
+
 
 
 #endif //COLLISION_OBJECT_H

@@ -54,6 +54,8 @@ int TranslateDefines(const char* value)
         return 16;
     if(strcmp("HAS_PHYSICS", value) == 0)
         return 32;
+    if(strcmp("HAS_COLLISION", value) == 0)
+        return 64;
 
     fprintf(stderr, "No define found for %s returning 0\n", value);
     return 0;

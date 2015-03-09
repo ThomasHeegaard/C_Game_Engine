@@ -17,7 +17,9 @@ SOURCES= \
 		 source/modules/graphics/fps_manager.c \
 		 source/modules/graphics/sprite.c \
 		 source/modules/graphics/graphics.c \
+		 source/modules/graphics/draw.c \
 		 source/modules/physics/physics.c \
+		 source/modules/collision/collision_object.c \
 		 source/main.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE= test
