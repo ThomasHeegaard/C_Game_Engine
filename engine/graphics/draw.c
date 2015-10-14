@@ -12,6 +12,7 @@
 
 #include <math.h>
 #include "draw.h"
+#include "extra_math.h"
 
 int ColorToARGB(Color color)
 {
@@ -100,9 +101,22 @@ ERR DrawLine(PixelMap* pm, Vector start, Vector end, Color color)
     return 0;
 }
 
-ERR DrawAngle(PixelMap* pm, Vector start, float angle, int length, Color color);
+ERR DrawAngle(PixelMap* pm, Vector start, float angle, int length, Color color)
+{
+    if(length == 0)
+        return 0;
+    return DrawLine(pm, start, RotateVector((Vector){start.x, start.y + length}, angle), color);
+}
 
-ERR DrawArrow(PixelMap* pm, Vector start, float angle, int length, Color color);
+ERR DrawArrow(PixelMap* pm, Vector start, float angle, int length, Color color)
+{
+    int err = 0;
+    Vector end = RotateVector((Vector){start.x, end.x + length}, angle);
+    err += DrawLine(pm, start, end, color);
+    err += DrawAngle(pm, end, angle + 45.0, length / 5, color);
+    err += DrawAngle(pm, end, angle - 45.0, length / 5, color);
+    return err;
+}
 
 ERR DrawCircle(PixelMap* pm, Vector center, int radius, Color color)
 {

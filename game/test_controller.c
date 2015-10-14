@@ -22,6 +22,7 @@
 #include "physics.h"
 #include "graphics.h"
 #include "draw.h"
+#include "debug.h"
 
 Entity* ship;
 Entity* flames;
@@ -42,16 +43,16 @@ unsigned char flags = 0;
 
 ERR InitTestController()
 {
-    ship = NewEntity("source/entities/ship.entity");
+    ship = NewEntity("game/entities/ship.entity");
     if(ship == NULL)
         return 1;
-    flames = NewEntity("source/entities/flames.entity");
+    flames = NewEntity("game/entities/flames.entity");
     if(flames == NULL)
     {
         FreeEntity(ship);
         return 1;
     }
-    yoshi = NewEntity("source/entities/test.entity");
+    yoshi = NewEntity("game/entities/test.entity");
     if(yoshi == NULL)
     {
         FreeEntity(ship);
@@ -59,7 +60,7 @@ ERR InitTestController()
         return 1;
     }
 
-    bolt = NewEntity("source/entities/bolt.entity");
+    bolt = NewEntity("game/entities/bolt.entity");
 
     ship->center_x          = 120;
     ship->center_y          = 120;
@@ -72,6 +73,9 @@ ERR InitTestController()
     yoshi->y_speed          = 0;
     yoshi->sprite->z_index  = 4;
     
+    UpdateEntity(ship);
+    UpdateEntity(flames);
+    UpdateEntity(yoshi);
 
     bolt->sprite->z_index   = 1;
 
@@ -123,6 +127,15 @@ ERR TestControllerLoop()
                     break;
                 case SDLK_LEFT: ship->a_speed   = -5.0; break;
                 case SDLK_RIGHT: ship->a_speed  = 5.0; break;
+                case SDLK_r :
+                    yoshi->center_x = 220;
+                    yoshi->center_y = 120;
+                    yoshi->x_speed = 0;
+                    yoshi->y_speed = 0;
+                    ship->center_x = 520;
+                    ship->center_y = 120;
+                    ship->x_speed = 0;
+                    ship->y_speed = 0;
                 case SDLK_SPACE:
                     tmp = CopyEntity(bolt);
                     tmp->center_x = ship->center_x;
@@ -154,11 +167,15 @@ ERR TestControllerLoop()
                 AddForce(ship->physics_object, RotateOffsetX(0.0, -20.0, ship->angle), RotateOffsetY(0.0, -20.0, ship->angle),
                         ship->physics_object->cog_x, ship->physics_object->cog_y);
 
-            //if(CheckCollision(ship->collision_object, yoshi->collision_object) != 0)
-            //{
-            //    printf("BOOM\n");
-            //    flags ^= CONTINUE;
-            //}
+            if(CheckCollision(ship->collision_object, yoshi->collision_object) != 0)
+            {
+                printf("BOOM\n");
+                //flags ^= CONTINUE;
+                AddForce(ship->physics_object, yoshi->x_speed * yoshi->physics_object->mass, yoshi->y_speed * yoshi->physics_object->mass,
+                        ship->physics_object->cog_x, ship->physics_object->cog_y);
+                AddForce(yoshi->physics_object, ship->x_speed * ship->physics_object->mass, ship->y_speed * ship->physics_object->mass,
+                        yoshi->physics_object->cog_x, yoshi->physics_object->cog_y);
+            }
             Element* el = bolts->start;
             Entity* tmp = NULL;
             int i = 0;
@@ -217,16 +234,16 @@ ERR TestControllerLoop()
         {
             ClearPMap(visual_debug);
             DrawEntity(ship);
-            DrawCircle(visual_debug, (Vector){ship->center_x, ship->center_y}, ship->collision_object->radius, GREEN);
+            DrawEntityDebugInfo(visual_debug, ship);
             DrawEntity(flames);
             DrawEntity(yoshi);
-            DrawCircle(visual_debug, (Vector){yoshi->center_x, yoshi->center_y}, yoshi->collision_object->radius, GREEN);
+            DrawEntityDebugInfo(visual_debug, yoshi);
             int i;
             for(i = 0; i < bolts->size; i++)
             {
                 Entity* tmp = (Entity*)GetValue(bolts, i);
                 DrawEntity(tmp);
-                DrawCircle(visual_debug, (Vector){tmp->center_x, tmp->center_y}, tmp->collision_object->radius, GREEN);
+                DrawEntityDebugInfo(visual_debug, tmp);
             }
             DrawPixelMap(visual_debug);
             Render();

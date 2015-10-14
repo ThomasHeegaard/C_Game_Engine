@@ -30,7 +30,7 @@ typedef struct Entity
     double              y_speed;
     float               a_speed;
 
-    unsigned short      bounding_diameter;
+    unsigned short      bounding_radius;
 
     Sprite*             sprite;
     PhysicsObject*      physics_object;

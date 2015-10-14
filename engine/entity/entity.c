@@ -53,7 +53,7 @@ Entity* NewEntity(const char* entity_file)
     entity->x_speed             = 0.0;
     entity->y_speed             = 0.0;
     entity->a_speed             = 0.0;
-    entity->bounding_diameter   = GetParameterInt("BOUNDINGDIAMETER");
+    entity->bounding_radius   = GetParameterInt("BOUNDINGDIAMETER");
     entity->sprite              = NULL;
     entity->physics_object      = NULL;
     entity->collision_object    = NULL;
@@ -82,7 +82,7 @@ Entity* NewEntity(const char* entity_file)
             fprintf(stderr, "Creating collision object failed\n");
             return NULL;
         }
-        entity->collision_object->radius = entity->bounding_diameter;
+        entity->collision_object->radius = entity->bounding_radius;
     }
 
     if(entity->flags & HAS_SPRITE)
@@ -151,7 +151,7 @@ Entity* CopyEntity(Entity* original)
     entity->x_speed             = original->x_speed;
     entity->y_speed             = original->y_speed;
     entity->a_speed             = original->a_speed;
-    entity->bounding_diameter   = original->bounding_diameter;
+    entity->bounding_radius   = original->bounding_radius;
     entity->sprite              = NULL;
     entity->physics_object      = NULL;
 

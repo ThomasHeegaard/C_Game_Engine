@@ -1,0 +1,9 @@
+
+
+#ship entity file
+
+TYPE = 1
+FLAGS = (HAS_SPRITE | HAS_PHYSICS | HAS_COLLISION)
+BOUNDINGDIAMETER = 10
+SPRITE = resources/bolt.sprite
+MASS = 30

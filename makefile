@@ -1,26 +1,34 @@
 CC=gcc
 CFLAGS= -g -Wall
 LDFLAGS= -lm -lSDL2
-INCPATH= -I /home/thomas/code/sdl/C_SDL2/source/core/ \
-		 -I /home/thomas/code/sdl/C_SDL2/source/utils/ \
-		 -I /home/thomas/code/sdl/C_SDL2/source/modules/graphics/ \
-		 -I /home/thomas/code/sdl/C_SDL2/source/modules/physics/ \
-		 -I /home/thomas/code/sdl/C_SDL2/source/modules/collision/
+INCPATH= -I engine/collision/ \
+		 -I engine/debug/ \
+		 -I engine/entity/ \
+		 -I engine/graphics/ \
+		 -I engine/physics/ \
+		 -I engine/sdl_wrapper/ \
+		 -I engine/utils/ \
+		 -I game/ \
+
 SOURCES= \
-		 source/core/entity.c \
-		 source/core/test_controller.c \
-		 source/core/sdl_wrapper.c \
-		 source/utils/live_define.c \
-		 source/utils/list.c \
-		 source/utils/extra_math.c \
-		 source/utils/config_loader.c \
-		 source/modules/graphics/fps_manager.c \
-		 source/modules/graphics/sprite.c \
-		 source/modules/graphics/graphics.c \
-		 source/modules/graphics/draw.c \
-		 source/modules/physics/physics.c \
-		 source/modules/collision/collision_object.c \
-		 source/main.c
+		engine/collision/collision.c \
+		engine/collision/collision_object.c \
+		engine/debug/debug.c \
+		engine/entity/entity.c \
+		engine/graphics/draw.c \
+		engine/graphics/fps_manager.c \
+		engine/graphics/graphics.c \
+		engine/graphics/sprite.c \
+		engine/physics/physics.c \
+		engine/sdl_wrapper/sdl_wrapper.c \
+		engine/utils/config_loader.c \
+		engine/utils/extra_math.c \
+		engine/utils/list.c \
+		game/live_define.c \
+		game/test_controller.c \
+		game/main.c
+		
+
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE= test
 

@@ -26,13 +26,13 @@ typedef struct Force
 
 typedef struct PhysicsObject
 {
-    double mass;
-    double cog_x;
-    double cog_y;
-    double a_x;
-    double a_y;
-    double a_alpha;
-    List*  forces;
+    double  mass;
+    double  cog_x;
+    double  cog_y;
+    double  a_x;
+    double  a_y;
+    double  a_alpha;
+    List*   forces;
 } PhysicsObject;
 
 PhysicsObject* NewPhysicsObject();

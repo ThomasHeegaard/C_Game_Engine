@@ -26,26 +26,26 @@ Force* NextForce(List* forces)
 PhysicsObject* NewPhysicsObject()
 {
     PhysicsObject* phys = (PhysicsObject*)malloc(sizeof(PhysicsObject));
+    phys->mass      = 1;
     phys->cog_x     = 0;
     phys->cog_y     = 0;
     phys->a_x       = 0;
     phys->a_y       = 0;
     phys->a_alpha   = 0;
     phys->forces    = NewList();
-    phys->mass      = 1;
     return phys;
 }
 
 PhysicsObject* CopyPhysicsObject(PhysicsObject* original)
 {
     PhysicsObject* phys = (PhysicsObject*)malloc(sizeof(PhysicsObject));
+    phys->mass      = original->mass;
     phys->cog_x     = original->cog_x;
     phys->cog_y     = original->cog_y;
     phys->a_x       = original->a_x;
     phys->a_y       = original->a_y;
     phys->a_alpha   = original->a_alpha;
     phys->forces    = NewList();
-    phys->mass      = original->mass;
     return phys;
 }
 

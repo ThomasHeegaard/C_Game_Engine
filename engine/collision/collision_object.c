@@ -111,7 +111,6 @@ ERR CheckElementCollision(CollisionElement* el_a, CollisionElement* el_b, int o_
     return 0;
 }
 
-
 ERR CheckCollision(CollisionObject* obj_a, CollisionObject* obj_b)
 {
     if(Distance(obj_a->center_x, obj_a->center_y, obj_b->center_x, obj_b->center_y) > obj_a->radius + obj_b->radius)

@@ -1,0 +1,9 @@
+
+#test entity file
+
+TYPE = 1
+FLAGS = (HAS_SPRITE | HAS_PHYSICS | HAS_COLLISION)
+MASS = 100
+BOUNDING DIAMETER = 30
+SPRITE = resources/test.sprite 
+

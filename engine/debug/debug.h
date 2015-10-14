@@ -1,8 +1,8 @@
 /*
 =================================== ===== ==== === == = =  =   =    =     =
-|File     : global_defines.h
+|File     : debug.h
 |Author   : Thomas Heegaard
-|Created  : 10/28/2014
+|Created  : 03/09/2015
 |Purpose  : 
 |
 |Comments : 
@@ -10,16 +10,12 @@
 =================================== ===== ==== === == = =  =   =    =     =
 */
 
-#ifndef GLOBAL_DEFINES_H
-#define GLOBAL_DEFINES_H
+#ifndef DEBUG_H
+#define DEBUG_H
 
-#define ERR unsigned char
+#include "draw.h"
+#include "entity.h"
 
-typedef struct Vector
-{
-    int x;
-    int y;
-}
-Vector;
+void DrawEntityDebugInfo(PixelMap* pm, Entity* entity);
 
-#endif //GLOBAL_DEFINES_H
+#endif //DEBUG_H

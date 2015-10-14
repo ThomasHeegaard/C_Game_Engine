@@ -1,0 +1,8 @@
+
+
+#ship entity file
+
+TYPE = 1
+FLAGS = HAS_SPRITE
+BOUNDING DIAMETER = 91
+SPRITE = resources/fire.sprite
